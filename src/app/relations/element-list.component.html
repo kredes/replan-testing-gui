@@ -1,0 +1,19 @@
+<div *ngIf="areFeatures">
+  <feature-detail *ngFor="let elem of elements" [feature]="elem"></feature-detail>
+</div>
+
+<div *ngIf="areProjects">
+  <project-detail *ngFor="let elem of elements" [project]="elem"></project-detail>
+</div>
+
+<div *ngIf="areReleases">
+  <release-detail *ngFor="let elem of elements" [release]="elem"></release-detail>
+</div>
+
+<div *ngIf="areResources">
+  <resource-detail *ngFor="let elem of elements" [resource]="elem"></resource-detail>
+</div>
+
+<div *ngIf="areSkills">
+  <skill-detail *ngFor="let elem of elements" [skill]="elem"></skill-detail>
+</div>

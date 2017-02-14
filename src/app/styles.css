@@ -1,0 +1,259 @@
+/*
+ * Color palette:
+ *   - Primary: #F4511E (Deep orange 600)
+ *   - Secondary: -
+ *   - Project: #3F51B5 (Indigo 500)
+ *   - Feature: #673AB7 (Deep purple 500)
+ *   - Release:
+ *   - Resource:
+ *   - Skill:
+ */
+
+* {
+  font-family: Roboto, sans-serif;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.clear {
+  clear: both;
+}
+
+div.vertical-line {
+  width: 0; /* Use only border style */
+  height: 100%;
+  float: left;
+  border: 1px inset; /* This is default border style for <hr> tag */
+}
+
+/* HEADER */
+#header {
+  /*background-color: #F4511E;*/
+  height: 100px;
+  line-height: 100px;
+  vertical-align: middle;
+
+  background: #f0f0f0; /* Old browsers */
+  background: -moz-linear-gradient(top, #f0f0f0 0%, #f4f4f4 50%, #f3f3f3 51%, #f8f8f8 100%); /* FF3.6-15 */
+  background: -webkit-linear-gradient(top, #f0f0f0 0%,#f4f4f4 50%,#f3f3f3 51%,#f8f8f8 100%); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(to bottom, #f0f0f0 0%,#f4f4f4 50%,#f3f3f3 51%,#f8f8f8 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f0f0f0', endColorstr='#f8f8f8',GradientType=0 ); /* IE6-9 */
+}
+
+#title {
+  padding: 20px;
+}
+
+#title h2 {
+  color: black;
+  margin: 0;
+  padding-left: 20px;
+}
+
+#header * {
+  padding: 0;
+}
+
+#url-selector select {
+  width: 50%;
+  margin: 0 auto;
+}
+
+
+/* NAVBAR */
+#navbar {
+  height: 30px;
+  background-color: #F4511E;
+  color: white;
+}
+
+
+/* Generic style for all detail cards */
+.title {
+  position: relative;
+}
+
+textarea {
+  overflow: auto;
+  resize: vertical;
+}
+
+.element-type {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  /* Override height and line-height defined in .project.title */
+  height: auto;
+  line-height: normal;
+
+  color: white;
+  font-style: italic;
+  font-size: 0.75em;
+  font-weight: bold;
+  padding: 3px;
+  border: 1px solid #3F51B5;
+  border-right-color: white;
+  border-bottom-color: white;
+}
+
+.labeled * {
+  width: 100%;
+  max-width: 100%;
+  text-align: left;
+  display: block;
+}
+
+.labeled label {
+  overflow: hidden;
+  display: block;
+  white-space: nowrap;
+  -ms-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+}
+
+div[class*="grid-cell-"] > label {
+  font-size: 75%;
+  /* Margin solves the retarded overlapping with the top border of text boxes.
+     Sometimes. I don't know how this shit actually works. */
+  margin-bottom: 3px;
+}
+
+.centered {
+  margin: 0 auto;
+}
+
+div[class$="-button"] {
+  display: table;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+div[class$="-button"] button {
+  display: table-cell;
+  width: 100%;
+  height: 40px;
+  line-height: 40px;
+  border: 0;
+  background: none;
+  box-shadow: none;
+  border-radius: 0px;
+  font-weight: bold;
+  background-color: #3F51B5;
+  color: white;
+}
+
+div[class$="-button"] button:hover {
+  background-color: #5C6BC0;
+}
+
+.save-button {
+  border-left: 1px solid white;
+}
+
+/* Project detail card */
+.project {
+  display: inline-block;
+  padding: 10px;
+  text-align: center;
+  width: 300px;
+}
+
+.project .title {
+  background-color: #3F51B5;
+  color: white;
+  height: 50px;
+  line-height: 50px;
+  vertical-align: middle;
+  margin: 0;
+}
+
+.project .details {
+  display: block;
+  float: left;
+  border-left: 2px solid #3F51B5;
+  border-bottom: 2px solid #3F51B5;
+  border-right: 2px solid #3F51B5;
+}
+
+
+/* Resource deatail card */
+/**/
+
+
+
+
+
+
+
+/* Miscellaneous */
+.centered-text {text-align: center;}
+.justified-text p{text-align: justify;}
+.vertically-aligned-text {vertical-align: middle;}
+
+
+/* Responsive grids */
+.grid-col {
+  width: 100%;
+  display: block;
+}
+
+.grid-row {
+  width: 100%;
+  display: block;
+}
+
+.grid-row::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+div[class*="grid-cell-"] {
+  float: left;
+  padding: 10px;
+}
+
+.grid-row > p, .grid-row > div[class*="kr-form-field"] > p {
+  font-weight: bold;
+  font-size: 1em;
+}
+
+.grid-row > p > *, .grid-row > div[class*="kr-form-field"] > p * {
+  font-weight: normal;
+  font-size: 1em;
+}
+
+.grid-row > p, .grid-row > div[class*="kr-form-field"] > p {
+  font-weight: bold;
+  font-size: 1vw;
+}
+
+.grid-row > p > *, .grid-row > div[class*="kr-form-field"] > p * {
+  font-weight: normal;
+  font-size: 1vw;
+}
+
+div.grid-cell-10 {width: 10%;}
+div.grid-cell-20 {width: 20%;}
+div.grid-cell-25 {width: 25%;}
+div.grid-cell-30 {width: 30%;}
+div.grid-cell-33 {width: 33.33%;}
+div.grid-cell-40 {width: 40%;}
+div.grid-cell-50 {width: 50%;}
+div.grid-cell-60 {width: 60%;}
+div.grid-cell-70 {width: 70%;}
+div.grid-cell-80 {width: 80%;}
+div.grid-cell-90 {width: 90%;}
+div.grid-cell-100 {width: 100%;}
+
+@media screen and (max-width: 1280px){
+  .project {
+    width: 200px;
+  }
+
+  .grid-row {
+    display: inline-block !important;
+  }
+}

@@ -1,3 +1,52 @@
-<h1>
-  {{title}}
-</h1>
+<div>
+  <div id="header" class="grid-row">
+    <div id="title" class="grid-cell-50">
+      <h2>{{title}}</h2>
+    </div>
+    <div id="url-selector" class="grid-cell-50">
+      <div class="centered">
+        <select>
+          <option value="http://localhost:3000/api/ui/v1">Local (http://localhost:3000/api/ui/v1)</option>
+          <option value="dummy">ATOS</option>
+          <option value="dummy">Whatever</option>
+        </select>
+        <button id="change-url" (click)="change_url()">Change</button>
+      </div>
+    </div>
+  </div>
+  <nav id="navbar" class="grid-row">
+    <div class="grid-cell-20">
+      <button id="create_element" class="save-button">New</button>
+    </div>
+
+    <div class="grid-cell-10">
+      <div class="vertical-line"></div>
+    </div>
+
+    <div class="grid-cell-70">
+      <div class="grid-row">
+        <button id="resources_tab_btn" class="save-button">Resources</button>
+        <button id="releases_tab_btn" class="save-button">Releases</button>
+        <button id="features_tab_btn" class="save-button">Features</button>
+        <button id="skills_tab_btn" class="save-button">Skills</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="clear"></div>
+
+  <div class="grid-row" *ngIf="project">
+    <div class="grid-cell-20">
+      <active-element [element]="project"></active-element>
+    </div>
+    <!-- Separator -->
+    <div class="grid-cell-10">
+      <div class="vertical-line"></div>
+    </div>
+    <!-- /Separator -->
+    <div class="grid-cell-70">
+      <element-list [elements]="project.resources"></element-list>
+    </div>
+  </div>
+</div>
+

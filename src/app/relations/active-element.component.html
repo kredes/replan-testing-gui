@@ -1,0 +1,19 @@
+<div *ngIf="isFeature">
+  <feature-detail [feature]="element"></feature-detail>
+</div>
+
+<div *ngIf="isProject">
+  <project-detail [project]="element"></project-detail>
+</div>
+
+<div *ngIf="isRelease">
+  <release-detail [release]="element"></release-detail>
+</div>
+
+<div *ngIf="isResource">
+  <resource-detail [resource]="element"></resource-detail>
+</div>
+
+<div *ngIf="isSkill">
+  <skill-detail [skill]="element"></skill-detail>
+</div>

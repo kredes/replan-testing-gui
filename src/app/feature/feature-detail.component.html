@@ -1,0 +1,70 @@
+<div class="project">
+  <div class="title">
+    <span class="element-type">Feature</span>
+    <h3>{{feature.name}}</h3>
+  </div>
+
+  <div class="details">
+    <form class="centered">
+      <!-- Row 1 -->
+      <div class="grid-row">
+        <div class="grid-cell-20 labeled">
+          <label>id</label>
+          <input disabled type="text" value="{{feature.id}}" />
+        </div>
+
+        <div class="grid-cell-20 labeled">
+          <label>code</label>
+          <input disabled type="text" value="{{feature.code}}" />
+        </div>
+
+        <div class="grid-cell-60 labeled">
+          <label>name</label>
+          <input type="text" value="{{feature.name}}" />
+        </div>
+      </div>
+      <!-- /Row 1 -->
+
+      <!-- Row 2 -->
+      <div class="grid-row">
+        <div class="grid-cell-100 labeled">
+          <label>description</label>
+          <textarea>{{feature.description}}</textarea>
+        </div>
+      </div>
+      <!-- /Row 2 -->
+
+      <!-- Row 3 -->
+      <div class="grid-row">
+        <div class="grid-cell-25 labeled">
+          <label>effort</label>
+          <input type="text" value="{{feature.effort}}" />
+        </div>
+
+        <div class="grid-cell-50 labeled">
+          <label>deadline</label>
+          <input type="text" value="{{feature.deadline}}" />
+        </div>
+
+        <div class="grid-cell-25 labeled">
+          <label>priority</label>
+          <input type="text" value="{{feature.priority}}" />
+        </div>
+      </div>
+      <!-- /Row 3 -->
+
+      <!-- Buttons -->
+      <div class="grid-row">
+        <div class="grid-cell-50 delete-button">
+          <button (click)="delete()">Delete</button>
+        </div>
+        <div class="grid-cell-50 save-button">
+          <button (click)="save()">Save</button>
+        </div>
+      </div>
+      <!-- /Buttons -->
+    </form>
+    <div class="clear"></div>
+  </div>
+  <div class="clear"></div>
+</div>
