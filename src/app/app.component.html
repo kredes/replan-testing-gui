@@ -21,9 +21,14 @@
 
     <div class="grid-cell-10"></div>
 
-    <div class="grid-cell-70">
-      <div class="grid-row">
-        <a *ngFor="let tab of validTabs" id="{{tab.toLowerCase()}}_tab_btn" (click)="onTabSelected(tab)">{{tab}}</a>
+    <div class="grid-cell-70 no-padding">
+      <div class="grid-cell-50 centered">
+        <a href="#" *ngFor="let tab of validTabs"
+           [class.selected]="tab === selectedTab"
+           id="{{tab.toLowerCase()}}_tab_btn"
+           (click)="onTabSelected(tab)">
+          {{tab}}
+        </a>
       </div>
     </div>
   </nav>

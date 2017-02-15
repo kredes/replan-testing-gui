@@ -13,6 +13,7 @@ export class AppComponent implements OnInit {
 
     activeElement: any;
     relatedElements: any[];
+    selectedTab: string;
 
     validTabs: string[];
 
@@ -34,30 +35,31 @@ export class AppComponent implements OnInit {
 
     onTabSelected(tab: string): void {
       // Update related items
-      tab = tab.toLowerCase();
       switch (tab) {
-        case 'resources':
+        case 'Resources':
           this.controllerService.getResourcesOf(this.activeElement)
             .then(resources => {
               this.relatedElements = resources;
-              console.info();
             });
           break;
-        case 'features':
+        case 'Features':
           this.controllerService.getFeaturesOf(this.activeElement)
             .then(features => {
               this.relatedElements = features;
               console.info("Call to getFeaturesOf(...) returned:", features);
             });
           break;
-        case 'releases':
+        case 'Releases':
           this.controllerService.getReleasesOf(this.activeElement)
             .then(releases => this.relatedElements = releases);
           break;
-        case 'skills':
+        case 'Skills':
           this.controllerService.getSkillsOf(this.activeElement)
             .then(skills => this.relatedElements = skills);
           break;
       }
+      this.selectedTab = tab;
+      console.debug("Selected tab:", this.selectedTab);
+      console.debug("Valid tabs:", this.validTabs);
     }
 }

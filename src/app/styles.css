@@ -1,7 +1,6 @@
 /*
  * Color palette:
- *   - Primary: #F4511E (Deep orange 600)
- *   - Secondary: -
+ *   - Navbar: #F4511E (Deep orange 600)
  *   - Project: #3F51B5 (Indigo 500)
  *   - Feature: #673AB7 (Deep purple 500)
  *   - Release:
@@ -18,6 +17,10 @@
 
 .clear {
   clear: both;
+}
+
+.no-padding {
+  padding: 0;
 }
 
 div.vertical-line {
@@ -41,14 +44,10 @@ div.vertical-line {
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f0f0f0', endColorstr='#f8f8f8',GradientType=0 ); /* IE6-9 */
 }
 
-#title {
-  padding: 20px;
-}
-
 #title h2 {
   color: black;
   margin: 0;
-  padding-left: 20px;
+  padding-left: 30px;
 }
 
 #header * {
@@ -63,11 +62,21 @@ div.vertical-line {
 
 /* NAVBAR */
 #navbar {
-  height: 30px;
   background-color: #F4511E;
   color: white;
 }
 
+#navbar a {
+  padding: 20px;
+  font-weight: bold;
+  text-decoration: none;
+  color: white;
+  height: 100%;
+}
+
+#navbar a:hover, a.selected {
+  background-color: #D84315;
+}
 
 /* Generic style for all detail cards */
 .title {
@@ -178,7 +187,7 @@ div[class$="-button"] button:hover {
 }
 
 
-/* Resource deatail card */
+/* Resource detail card */
 /**/
 
 
