@@ -16,28 +16,23 @@
   </div>
   <nav id="navbar" class="grid-row">
     <div class="grid-cell-20">
-      <button id="create_element" class="save-button">New</button>
+      <button id="create_element">New</button>
     </div>
 
-    <div class="grid-cell-10">
-      <div class="vertical-line"></div>
-    </div>
+    <div class="grid-cell-10"></div>
 
     <div class="grid-cell-70">
       <div class="grid-row">
-        <button id="resources_tab_btn" class="save-button">Resources</button>
-        <button id="releases_tab_btn" class="save-button">Releases</button>
-        <button id="features_tab_btn" class="save-button">Features</button>
-        <button id="skills_tab_btn" class="save-button">Skills</button>
+        <a *ngFor="let tab of validTabs" id="{{tab.toLowerCase()}}_tab_btn" (click)="onTabSelected(tab)">{{tab}}</a>
       </div>
     </div>
   </nav>
 
   <div class="clear"></div>
 
-  <div class="grid-row" *ngIf="project">
+  <div class="grid-row" *ngIf="activeElement">
     <div class="grid-cell-20">
-      <active-element [element]="project"></active-element>
+      <active-element [element]="activeElement"></active-element>
     </div>
     <!-- Separator -->
     <div class="grid-cell-10">
@@ -45,7 +40,7 @@
     </div>
     <!-- /Separator -->
     <div class="grid-cell-70">
-      <element-list [elements]="project.resources"></element-list>
+      <element-list [elements]="relatedElements"></element-list>
     </div>
   </div>
 </div>

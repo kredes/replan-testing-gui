@@ -1,3 +1,5 @@
+import {Config} from "../config";
+import {Log} from "../log";
 export class Skill {
 
   constructor(
@@ -13,7 +15,7 @@ export class Skill {
   }
 
   static fromJSON(j: any): Skill {
-    console.log('Creating Skill from:', j);
+    if (!Config.suppressElementCreationMessages) Log.i('Creating Skill from:', j);
     return new Skill(
       j.id,
       j.name,
@@ -22,6 +24,7 @@ export class Skill {
   }
 
   static fromJSONArray(j: any): Skill[] {
+    if (!Config.suppressElementCreationMessages) Log.i('Creating several Skills from:', j);
     let skills: Skill[] = [];
     j.forEach(skill => skills.push(this.fromJSON(skill)));
     return skills;

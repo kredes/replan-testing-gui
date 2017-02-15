@@ -4,7 +4,6 @@ import {Feature} from "../domain/feature";
 import {Resource} from "../domain/resource";
 import {Skill} from "../domain/skill";
 import {Project} from "../domain/project";
-import {element} from "protractor";
 
 @Component({
   moduleId: module.id,
@@ -23,11 +22,11 @@ export class ActiveElementComponent implements OnInit {
   public isProject: boolean;
 
   ngOnInit(): void {
-    if (element instanceof Feature) this.isFeature = true;
-    else if (element instanceof Release) this.isRelease = true;
-    else if (element instanceof Resource) this.isResource = true;
-    else if (element instanceof Skill) this.isSkill = true;
-    else if (element instanceof Project) this.isProject = true;
+    if (this.element instanceof Feature) this.isFeature = true;
+    else if (this.element instanceof Release) this.isRelease = true;
+    else if (this.element instanceof Resource) this.isResource = true;
+    else if (this.element instanceof Skill) this.isSkill = true;
+    else if (this.element instanceof Project) this.isProject = true;
     else {
       console.log('Element list provided with an invalid element.');
     }

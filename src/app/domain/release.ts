@@ -1,4 +1,6 @@
 import {Resource} from "./resource";
+import {Config} from "../config";
+import {Log} from "../log";
 export class Release {
 
   constructor(
@@ -17,7 +19,7 @@ export class Release {
   }
 
   static fromJSON(j: any): Release {
-    console.log('Creating Release from:', j);
+    if (!Config.suppressElementCreationMessages) Log.i('Creating Release from:', j);
     return new Release(
       j.id,
       j.name,

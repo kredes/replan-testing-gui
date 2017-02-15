@@ -1,4 +1,6 @@
 import {Skill} from "./skill";
+import {Config} from "../config";
+import {Log} from "../log";
 
 export class Resource {
 
@@ -12,7 +14,7 @@ export class Resource {
 
 
   static fromJSON(j: any): Resource {
-    console.log('Creating Resource from:', j);
+    if (!Config.suppressElementCreationMessages) Log.i('Creating Resource from:', j);
     return new Resource(
       j.id,
       j.name,

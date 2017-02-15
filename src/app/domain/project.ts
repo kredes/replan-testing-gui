@@ -1,4 +1,7 @@
 import {Resource} from "./resource";
+import {Feature} from "./feature";
+import {Config} from "../config";
+import {Log} from "../log";
 
 export class Project {
 
@@ -13,7 +16,7 @@ export class Project {
   ) {}
 
   static fromJSON(j: any): Project {
-    console.log('Creating Project from:', j);
+    if (!Config.suppressElementCreationMessages) Log.i('Creating Project from:', j);
     return new Project(
       j.id,
       j.name,

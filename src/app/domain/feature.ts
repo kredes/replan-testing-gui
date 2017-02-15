@@ -1,5 +1,7 @@
 import {Resource} from "./resource";
 import {Skill} from "./skill";
+import {Config} from "../config";
+import {Log} from "../log";
 
 export class Feature {
 
@@ -17,7 +19,7 @@ export class Feature {
 
 
   static fromJSON(j: any): Feature {
-    console.log('Creating Feature from:', j);
+    if (!Config.suppressElementCreationMessages) Log.i('Creating Feature from:', j);
     return new Feature(
       j.id,
       j.code,
@@ -26,14 +28,20 @@ export class Feature {
       j.effort,
       j.deadline,
       j.priority,
-      Skill.fromJSONArray(j.required_skills),
-      Feature.fromJSONArray(j.depends_on)
+      Skill.fromJSONArray(j['required_skills']),
+      null // If you try to create the dependencies from here it will crash as
+           // the server doesn't provide the full data for them
     );
   }
 
   static fromJSONArray(j: any): Feature[] {
     let features: Feature[] = [];
-    j.forEach(feature => features.push(this.fromJSON(feature)));
+    //j.forEach(feature => features.push(this.fromJSON(feature)));
+    if (!Config.suppressElementCreationMessages) Log.i('Creating several Features from:', j);
+    for (let i = 0; i < j.length; ++i) {
+      features.push(Feature.fromJSON(j[i]));
+    }
+
     return features;
   }
 }

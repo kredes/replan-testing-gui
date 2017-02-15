@@ -1,4 +1,4 @@
-import {Component, OnInit, Input} from "@angular/core";
+import {Component, Input, OnChanges} from "@angular/core";
 import {Release} from "../domain/release";
 import {Feature} from "../domain/feature";
 import {Resource} from "../domain/resource";
@@ -11,7 +11,7 @@ import {Project} from "../domain/project";
   templateUrl: 'element-list.component.html',
   styleUrls: ['../styles.css']
 })
-export class ElementListComponent implements OnInit {
+export class ElementListComponent implements OnChanges {
   @Input()
   elements: any[];
 
@@ -21,7 +21,8 @@ export class ElementListComponent implements OnInit {
   public areSkills: boolean;
   public areProjects: boolean;
 
-  ngOnInit(): void {
+  ngOnChanges(): void {
+    this.areFeatures = this.areProjects = this.areSkills = this.areResources = this.areReleases = false;
     if (this.elements.length > 0) {
       let elem = this.elements[0];
       let valid = true;
@@ -32,10 +33,10 @@ export class ElementListComponent implements OnInit {
       else if (elem instanceof Project) this.areProjects = true;
       else {
         valid = false;
-        console.log('Element list provided with array of invalid elements');
+        console.error('Element list provided with array of invalid elements');
       }
     } else {
-      console.log('Element list provided with empty array');
+      console.error('Element list provided with empty array');
     }
   }
 }
