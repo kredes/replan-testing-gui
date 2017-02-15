@@ -20,7 +20,7 @@
 
         <div class="grid-cell-60 labeled">
           <label>name</label>
-          <input type="text" value="{{feature.name}}" />
+          <input [(ngModel)]="feature.name" name="name" type="text" value="{{feature.name}}" />
         </div>
       </div>
       <!-- /Row 1 -->
@@ -29,7 +29,7 @@
       <div class="grid-row">
         <div class="grid-cell-100 labeled">
           <label>description</label>
-          <textarea>{{feature.description}}</textarea>
+          <textarea [(ngModel)]="feature.description" name="description">{{feature.description}}</textarea>
         </div>
       </div>
       <!-- /Row 2 -->
@@ -38,17 +38,17 @@
       <div class="grid-row">
         <div class="grid-cell-25 labeled">
           <label>effort</label>
-          <input type="text" value="{{feature.effort}}" />
+          <input [(ngModel)]="feature.effort" name="effort" type="text" value="{{feature.effort}}" />
         </div>
 
         <div class="grid-cell-50 labeled">
           <label>deadline</label>
-          <input type="text" value="{{feature.deadline}}" />
+          <input [(ngModel)]="feature.deadline" name="deadline" type="text" value="{{feature.deadline}}" />
         </div>
 
         <div class="grid-cell-25 labeled">
           <label>priority</label>
-          <input type="text" value="{{feature.priority}}" />
+          <input [(ngModel)]="feature.priority" name="priority" type="text" value="{{feature.priority}}" />
         </div>
       </div>
       <!-- /Row 3 -->
@@ -59,7 +59,7 @@
           <button (click)="delete()">Delete</button>
         </div>
         <div class="grid-cell-50 save-button">
-          <button (click)="save()">Save</button>
+          <button (click)="update()">Save</button>
         </div>
       </div>
       <!-- /Buttons -->

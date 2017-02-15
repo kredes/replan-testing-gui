@@ -24,6 +24,7 @@ export class AppComponent implements OnInit {
     init(project: Project): void {
       this.activeElement = project
       this.relatedElements = this.activeElement.resources;
+      this.selectedTab = 'Resources';
       this.validTabs = ["Resources", "Features", "Releases", "Skills"];
     }
 

@@ -123,7 +123,20 @@ export class ControllerService {
     return null;
   }
 
-
+  /* -------- */
+  updateFeature(feature: Feature): Promise<Object> {
+    let body: Object = {
+      'name': feature.name,
+      'description': feature.description,
+      'effort': feature.effort,
+      'deadline': feature.deadline,
+      'priority': feature.priority
+    }
+    return this.http.put(this.basePath + '/features/' + feature.id, body)
+      .toPromise()
+      .then(response => response)
+      .catch(this.handleError)
+  }
 
 
 

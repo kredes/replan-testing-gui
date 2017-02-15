@@ -1,5 +1,6 @@
 import {Feature} from "../domain/feature";
 import {Component, OnInit, Input} from "@angular/core";
+import {ControllerService} from "../services/controller.service";
 
 @Component({
   moduleId: module.id,
@@ -11,6 +12,14 @@ export class FeatureDetailComponent implements OnInit {
   @Input()
   feature: Feature;
 
+  constructor(private controllerService: ControllerService) {}
+
   ngOnInit(): void {
+  }
+
+  /* Returns the http code returned by the PUT */
+  update(): void {
+    this.controllerService.updateFeature(this.feature)
+      .then(response => console.table(response));
   }
 }
