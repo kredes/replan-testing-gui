@@ -15,7 +15,7 @@
 
         <div class="grid-cell-80 labeled">
           <label>name</label>
-          <input type="text" value="{{skill.name}}" />
+          <input [(ngModel)]="skill.name" name="name" type="text" value="{{skill.name}}" />
         </div>
       </div>
       <!-- /Row 1 -->
@@ -24,7 +24,7 @@
       <div class="grid-row">
         <div class="grid-cell-100 labeled">
           <label>description</label>
-          <textarea>{{skill.description}}</textarea>
+          <textarea [(ngModel)]="skill.description" name="description">{{skill.description}}</textarea>
         </div>
       </div>
       <!-- /Row 2 -->
@@ -35,7 +35,7 @@
           <button (click)="delete()">Delete</button>
         </div>
         <div class="grid-cell-50 save-button">
-          <button (click)="save()">Save</button>
+          <button (click)="update()">Save</button>
         </div>
       </div>
       <!-- /Buttons -->

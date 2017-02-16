@@ -138,6 +138,52 @@ export class ControllerService {
       .catch(this.handleError)
   }
 
+  updateProject(project: Project): Promise<Object> {
+    let body: Object = {
+      'effort_unit': project.effort_unit,
+      'hours_per_effort_unit': project.hours_per_effort_unit,
+      'hours_per_week_and_full_time_resource': project.hours_per_week_and_full_time_resource
+    }
+    return this.http.put(this.basePath, body)
+      .toPromise()
+      .then(response => response)
+      .catch(this.handleError)
+  }
+
+  updateRelease(release: Release): Promise<Object> {
+    let body: Object = {
+      'name': release.name,
+      'description': release.description,
+      'deadline': release.deadline
+    }
+    return this.http.put(this.basePath + '/releases/' + release.id, body)
+      .toPromise()
+      .then(response => response)
+      .catch(this.handleError)
+  }
+
+  updateResource(resource: Resource): Promise<Object> {
+    let body: Object = {
+      'name': resource.name,
+      'availability': resource.availability,
+      'description': resource.description
+    }
+    return this.http.put(this.basePath + '/resources/' + resource.id, body)
+      .toPromise()
+      .then(response => response)
+      .catch(this.handleError)
+  }
+
+  updateSkill(skill: Skill): Promise<Object> {
+    let body: Object = {
+      'name': skill.name,
+      'description': skill.description
+    }
+    return this.http.put(this.basePath + '/skills/' + skill.id, body)
+      .toPromise()
+      .then(response => response)
+      .catch(this.handleError)
+  }
 
 
   handleError(error: any): Promise<any> {

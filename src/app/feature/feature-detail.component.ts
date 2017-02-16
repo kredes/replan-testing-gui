@@ -17,7 +17,7 @@ export class FeatureDetailComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  /* Returns the http code returned by the PUT */
+
   update(): void {
     this.controllerService.updateFeature(this.feature)
       .then(response => console.table(response));

@@ -33,11 +33,11 @@
       <div class="grid-row">
         <div class="grid-cell-50 labeled">
           <label>effort_unit</label>
-          <input type="text" value="{{project.effort_unit}}">
+          <input [(ngModel)]="project.effort_unit" name="effort_unit" type="text" value="{{project.effort_unit}}">
         </div>
         <div class="grid-cell-50 labeled">
           <label>hours_per_effort_unit</label>
-          <input type="text" value="{{project.hours_per_effort_unit}}">
+          <input [(ngModel)]="project.hours_per_effort_unit" name="hours_per_effort_unit" type="text" value="{{project.hours_per_effort_unit}}">
         </div>
       </div>
       <!-- /Row 3 -->
@@ -46,7 +46,7 @@
       <div class="grid-row">
         <div class="grid-cell-100 labeled">
           <label>hours_per_week_and_full_time_resource</label>
-          <input type="text" value="{{project.hours_per_week_and_full_time_resource}}">
+          <input [(ngModel)]="project.hours_per_week_and_full_time_resource" name="hours_per_week_and_full_time_resource" type="text" value="{{project.hours_per_week_and_full_time_resource}}">
         </div>
       </div>
 
@@ -56,7 +56,7 @@
           <button (click)="delete()">Delete</button>
         </div>
         <div class="grid-cell-50 save-button">
-          <button (click)="save()">Save</button>
+          <button (click)="update()">Save</button>
         </div>
       </div>
       <!-- /Buttons -->

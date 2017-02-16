@@ -15,7 +15,7 @@
 
         <div class="grid-cell-80 labeled">
           <label>name</label>
-          <input type="text" value="{{release.name}}" />
+          <input [(ngModel)]="release.name" name="name" type="text" value="{{release.name}}" />
         </div>
       </div>
       <!-- /Row 1 -->
@@ -24,19 +24,17 @@
       <div class="grid-row">
         <div class="grid-cell-100 labeled">
           <label>description</label>
-          <textarea>{{release.description}}</textarea>
+          <textarea [(ngModel)]="release.description" name="description">{{release.description}}</textarea>
         </div>
       </div>
       <!-- /Row 2 -->
 
       <!-- Row 3 -->
       <div class="grid-row">
-        <div class="grid-cell-25"></div>
-        <div class="grid-cell-50 labeled centered">
+        <div class="grid-cell-100 labeled">
           <label>deadline</label>
-          <input type="text" value="{{release.deadline}}" />
+          <input [(ngModel)]="release.deadline" name="deadline" type="text" value="{{release.deadline}}" />
         </div>
-        <div class="grid-cell-25"></div>
       </div>
       <!-- /Row 3 -->
 
@@ -46,7 +44,7 @@
           <button (click)="delete()">Delete</button>
         </div>
         <div class="grid-cell-50 save-button">
-          <button (click)="save()">Save</button>
+          <button (click)="update()">Save</button>
         </div>
       </div>
       <!-- /Buttons -->

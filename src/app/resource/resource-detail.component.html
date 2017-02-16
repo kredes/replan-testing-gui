@@ -15,12 +15,12 @@
 
         <div class="grid-cell-50 labeled">
           <label>name</label>
-          <input type="text" value="{{resource.name}}" />
+          <input [(ngModel)]="resource.name" name="name" type="text" value="{{resource.name}}" />
         </div>
 
         <div class="grid-cell-30 labeled">
           <label>availability</label>
-          <input type="text" value="{{resource.availability}}" />
+          <input [(ngModel)]="resource.availability" name="availability" type="text" value="{{resource.availability}}" />
         </div>
       </div>
       <!-- /Row 1 -->
@@ -29,7 +29,7 @@
       <div class="grid-row">
         <div class="grid-cell-100 labeled">
           <label>description</label>
-          <textarea>{{resource.description}}</textarea>
+          <textarea [(ngModel)]="resource.description" name="description">{{resource.description}}</textarea>
         </div>
       </div>
       <!-- /Row 2 -->
@@ -40,7 +40,7 @@
           <button (click)="delete()">Delete</button>
         </div>
         <div class="grid-cell-50 save-button">
-          <button (click)="save()">Save</button>
+          <button (click)="update()">Save</button>
         </div>
       </div>
       <!-- /Buttons -->

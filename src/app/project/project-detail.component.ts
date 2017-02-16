@@ -1,5 +1,6 @@
 import {Project} from "../domain/project";
 import {Component, OnInit, Input} from "@angular/core";
+import {ControllerService} from "../services/controller.service";
 
 @Component({
   moduleId: module.id,
@@ -11,6 +12,13 @@ export class ProjectDetailComponent implements OnInit {
   @Input()
   project: Project;
 
+  constructor(private controllerService: ControllerService) {}
+
   ngOnInit(): void {
+  }
+
+  update(): void {
+    this.controllerService.updateProject(this.project)
+      .then(response => console.table(response));
   }
 }
