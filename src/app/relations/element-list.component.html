@@ -1,19 +1,52 @@
 <div *ngIf="areFeatures">
-  <feature-detail *ngFor="let elem of elements" [feature]="elem"></feature-detail>
+  <div class="grid-row">
+    <h3 class="list-elem-type-title">Features</h3>
+    <a href="#" class="create-element" (click)="newElement()">+</a>
+  </div>
+  <feature-detail *ngFor="let elem of elements" [element]="elem" [createElement]="false"
+                  [onElementChange]="onElementChange" (elementSelected)="onElementSelected($event)"></feature-detail>
+  <feature-detail *ngIf="createElement" [createElement]="true" [onElementChange]="onElementChange" (elementCreated)="elementCreated()"></feature-detail>
 </div>
 
 <div *ngIf="areProjects">
-  <project-detail *ngFor="let elem of elements" [project]="elem"></project-detail>
+  <div class="grid-row">
+    <h3 class="list-elem-type-title">Projects</h3>
+    <a href="#" class="create-element" (click)="newElement()">+</a>
+  </div>
+  <project-detail *ngFor="let elem of elements" [element]="elem" [createElement]="false"
+                  [onElementChange]="onElementChange" (elementSelected)="onElementSelected($event)"></project-detail>
+  <project-detail *ngIf="createElement" [createElement]="true" [onElementChange]="onElementChange" (elementCreated)="elementCreated()"></project-detail>
 </div>
 
 <div *ngIf="areReleases">
-  <release-detail *ngFor="let elem of elements" [release]="elem"></release-detail>
+  <div class="grid-row">
+    <h3 class="list-elem-type-title">Releases</h3>
+    <a href="#" class="create-element" (click)="newElement()">+</a>
+  </div>
+  <release-detail *ngFor="let elem of elements" [element]="elem" [createElement]="false"
+                  [onElementChange]="onElementChange"(elementSelected)="onElementSelected($event)"></release-detail>
+  <release-detail *ngIf="createElement" [createElement]="true" [onElementChange]="onElementChange" (elementCreated)="elementCreated()"></release-detail>
 </div>
+
 
 <div *ngIf="areResources">
-  <resource-detail *ngFor="let elem of elements" [resource]="elem"></resource-detail>
+  <div class="grid-row">
+    <h3 class="list-elem-type-title">Resources</h3>
+    <a href="#" class="create-element" (click)="newElement()">+</a>
+  </div>
+  <resource-detail *ngFor="let elem of elements" [element]="elem" [createElement]="false"
+                   [onElementChange]="onElementChange" (elementSelected)="onElementSelected($event)"></resource-detail>
+  <resource-detail *ngIf="createElement" [createElement]="true" [onElementChange]="onElementChange" (elementCreated)="elementCreated()"></resource-detail>
 </div>
 
+
 <div *ngIf="areSkills">
-  <skill-detail *ngFor="let elem of elements" [skill]="elem"></skill-detail>
+  <div class="grid-row">
+    <h3 class="list-elem-type-title">Skills</h3>
+    <a href="#" class="create-element" (click)="newElement()">+</a>
+  </div>
+  <skill-detail *ngFor="let elem of elements" [element]="elem" [createElement]="false"
+                [onElementChange]="onElementChange"(elementSelected)="onElementSelected($event)"></skill-detail>
+  <skill-detail *ngIf="createElement" [createElement]="true" [onElementChange]="onElementChange" (elementCreated)="elementCreated()"></skill-detail>
 </div>
+

@@ -1,0 +1,22 @@
+.list-elem-type-title {
+  display: inline-block;
+  text-decoration: underline;
+  color: rgba(0, 0, 0, 0.5);
+  padding-left: 10px;
+  margin: 0;
+  margin-top: 15px;
+}
+
+.create-element {
+  font-size: 2em;
+  font-weight: bold;
+  text-decoration: none;
+  color: black;
+  display: inline-block;
+  margin-left: 10px;
+}
+
+.create-element:hover, .create-element.selected {
+  color: #F4511E;
+}
+

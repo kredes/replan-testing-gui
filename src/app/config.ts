@@ -1,3 +1,3 @@
 export class Config {
-  static suppressElementCreationMessages = false;
+  static suppressElementCreationMessages = true;
 }

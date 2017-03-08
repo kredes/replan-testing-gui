@@ -1,4 +1,5 @@
 <div>
+  <!-- HEADER -->
   <div id="header" class="grid-row">
     <div id="title" class="grid-cell-50">
       <h2>{{title}}</h2>
@@ -15,37 +16,44 @@
     </div>
   </div>
   <nav id="navbar" class="grid-row">
-    <div class="grid-cell-20">
-      <button id="create_element">New</button>
-    </div>
+    <div class="grid-cell-40"></div>
 
-    <div class="grid-cell-10"></div>
-
-    <div class="grid-cell-70 no-padding">
-      <div class="grid-cell-50 centered">
+    <div class="grid-cell-60 no-padding">
+      <div class="grid-cell-90 no-padding centered">
         <a href="#" *ngFor="let tab of validTabs"
            [class.selected]="tab === selectedTab"
-           id="{{tab.toLowerCase()}}_tab_btn"
+           id="{{tab.toLowerCase()}}-tab-btn"
            (click)="onTabSelected(tab)">
           {{tab}}
         </a>
       </div>
     </div>
   </nav>
+  <nav id="breadcrumbs" class="grid-row">
+    <div class="grid-cell-100">
+      <a href="#" style="text-decoration: none; padding-left: 10px;">All projects</a>
+      <span *ngFor="let element of breadcrumbs">
+        &nbsp;&nbsp;>
+        <a href="#" style="text-decoration: none; padding-left: 10px;"
+         (click)="onBreadcrumbSelected(element)">{{element.name}} </a>
+      </span>
+    </div>
+  </nav>
 
   <div class="clear"></div>
 
-  <div class="grid-row" *ngIf="activeElement">
+  <!-- CONTENT -->
+  <div *ngIf="activeElement">
     <div class="grid-cell-20">
-      <active-element [element]="activeElement"></active-element>
+      <active-element [element]="activeElement" [onElementChange]="this"></active-element>
     </div>
-    <!-- Separator -->
-    <div class="grid-cell-10">
-      <div class="vertical-line"></div>
+
+    <div class="grid-cell-60">
+      <element-list [elements]="relatedElements" [onElementChange]="this" (elementSelected)="onElementSelected($event)"></element-list>
     </div>
-    <!-- /Separator -->
-    <div class="grid-cell-70">
-      <element-list [elements]="relatedElements"></element-list>
+
+    <div class="grid-cell-20">
+      <change-record></change-record>
     </div>
   </div>
 </div>

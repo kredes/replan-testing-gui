@@ -1,0 +1,6 @@
+<div class="grid-row">
+  <h3 class="record-title">History</h3>
+</div>
+<div #scrollableRecordDiv class="grid-row record-container">
+  <record-detail *ngFor="let record of records" [record]="record" (undoneRecord)="onRecordUndone($event)"></record-detail>
+</div>

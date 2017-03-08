@@ -1,0 +1,24 @@
+<div class="grid-row {{record.getTypeName()}}-record"
+     onload="">
+  <div class="grid-cell-100">
+    <!-- TODO: Color the keyword (updated, created, deleted) instead of the background. -->
+    <!-- TODO: Meaningful message when the operation fails -->
+    <p>{{record.id}}</p>
+    <p>{{record.getMessage()}}</p>
+
+    <!--
+    <a href="#" (click)="toggleCollapse()">Previous values</a>
+    <div style="display: block;" [collapse]="previousValuesCollapsed">
+      <pre *ngIf="record.getTypeName() != 'creation'">{{record.toJSON()}}</pre>
+    </div>
+
+    <p (click)="responseCollapsed = !responseCollapsed">Response</p>
+    -->
+    <p>Response</p>
+    <p>Coming soon...</p>
+    <p>Previous values</p>
+    <pre *ngIf="record.getTypeName() != 'creation'">{{record.toJSON()}}</pre>
+
+    <button (click)="undo(record)">Undo</button>
+  </div>
+</div>

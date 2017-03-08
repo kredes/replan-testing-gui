@@ -1,0 +1,118 @@
+<div class="project">
+  <div class="title">
+    <span class="element-type">Feature</span>
+    <h3>{{element.name}}</h3>
+  </div>
+
+  <div class="details">
+    <form class="centered">
+      <!-- Row 1 -->
+      <div class="grid-row">
+        <div class="grid-cell-20 labeled">
+          <label>id</label>
+          <input disabled type="text" value="{{element.id}}" />
+        </div>
+
+        <div class="grid-cell-20 labeled">
+          <label>code</label>
+          <input disabled type="text" value="{{element.code}}" />
+        </div>
+
+        <div class="grid-cell-60 labeled">
+          <label>name</label>
+          <input #a (blur)="element.name=a.value" name="name" type="text" value="{{createElement ? '' : element.name}}" />
+        </div>
+      </div>
+      <!-- /Row 1 -->
+
+      <!-- Row 2 -->
+      <div class="grid-row">
+        <div class="grid-cell-100 labeled">
+          <label>description</label>
+          <textarea #b (blur)="element.description=b.value" name="description">{{createElement ? '' : element.description}}</textarea>
+        </div>
+      </div>
+      <!-- /Row 2 -->
+
+      <!-- Row 3 -->
+      <div class="grid-row">
+        <div class="grid-cell-25 labeled">
+          <label>effort</label>
+          <input #c (blur)="element.effort=c.value" name="effort" type="text" value="{{createElement ? '' : element.effort}}" />
+        </div>
+
+        <div class="grid-cell-50 labeled">
+          <label>deadline</label>
+          <input #d (blur)="element.deadline=d.value" name="deadline" type="text" value="{{createElement ? '' : element.deadline}}" />
+        </div>
+
+        <div class="grid-cell-25 labeled">
+          <label>priority</label>
+          <input #e (blur)="element.priority=e.value" name="priority" type="text" value="{{createElement ? '' : element.priority}}" />
+        </div>
+      </div>
+      <!-- /Row 3 -->
+
+      <!-- Row 4 -->
+      <div *ngIf="element.required_skills && element.required_skills.length > 0" class="grid-row">
+        <div class="grid-cell-100 labeled">
+          <label>required skills</label>
+          <!-- TODO: Make this expandable so it doesn't take up a shitton of space-->
+          <div class="checkbox-box">
+            <!-- TODO: This should be for each skill of the PROJECT -->
+            <label *ngFor="let skill of element.required_skills">
+              <input (change)="onSkillStateChange($event)"
+                checked type="checkbox" name="skill-{{skill.id}}" value="{{skill.id}}"/>
+              {{skill.name}}
+            </label>
+          </div>
+        </div>
+      </div>
+      <!-- /Row 4 -->
+
+      <!-- Row 5 -->
+      <div *ngIf="element.depends_on && element.depends_on.length > 0" class="grid-row">
+        <div class="grid-cell-100 labeled">
+          <label>depends on</label>
+          <!-- TODO: Make this expandable so it doesn't take up a shitton of space-->
+          <div class="checkbox-box">
+            <!-- TODO: This should be for each skill of the PROJECT -->
+            <label *ngFor="let feature of element.depends_on">
+              <input (change)="onDependencyStateChange($event)"
+                checked type="checkbox" name="feature-{{feature.id}}" value="{{feature.id}}"/>
+              {{feature.name}}
+            </label>
+          </div>
+        </div>
+      </div>
+      <!-- /Row 5 -->
+
+      <!-- Buttons -->
+      <div *ngIf="!createElement" class="grid-row">
+        <div class="grid-cell-33 delete-button">
+          <button (click)="remove()">Delete</button>
+        </div>
+
+        <div class="grid-cell-33 save-button">
+          <button (click)="onElementSelected(this.element)">Select</button>
+        </div>
+
+        <div class="grid-cell-33 save-button">
+          <button (click)="update()">Save</button>
+        </div>
+      </div>
+
+      <div *ngIf="createElement">
+        <div class="grid-cell-50 delete-button">
+          <button (click)="cancelCreation()">Cancel</button>
+        </div>
+        <div class="grid-cell-50 save-button">
+          <button (click)="save()">Save</button>
+        </div>
+      </div>
+      <!-- /Buttons -->
+    </form>
+    <div class="clear"></div>
+  </div>
+  <div class="clear"></div>
+</div>

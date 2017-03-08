@@ -20,7 +20,7 @@
 }
 
 .no-padding {
-  padding: 0;
+  padding: 0 !important;
 }
 
 div.vertical-line {
@@ -72,6 +72,7 @@ div.vertical-line {
   text-decoration: none;
   color: white;
   height: 100%;
+  display: inline-block;
 }
 
 #navbar a:hover, a.selected {
@@ -122,6 +123,13 @@ textarea {
   text-overflow: ellipsis;
 }
 
+.checkbox-box label, .checkbox-box input {
+  width: auto;
+  display: inline;
+  text-align: center;
+  font-size: 0.8em;
+}
+
 div[class*="grid-cell-"] > label {
   font-size: 75%;
   /* Margin solves the retarded overlapping with the top border of text boxes.
@@ -166,7 +174,9 @@ div[class$="-button"] button:hover {
   display: inline-block;
   padding: 10px;
   text-align: center;
-  width: 300px;
+  width: 100%;
+  min-width: 250px;
+  max-width: 275px;
 }
 
 .project .title {
@@ -202,7 +212,7 @@ div[class$="-button"] button:hover {
 .vertically-aligned-text {vertical-align: middle;}
 
 
-/* Responsive grids */
+/* """Responsive""" grids */
 .grid-col {
   width: 100%;
   display: block;
@@ -224,26 +234,7 @@ div[class*="grid-cell-"] {
   padding: 10px;
 }
 
-.grid-row > p, .grid-row > div[class*="kr-form-field"] > p {
-  font-weight: bold;
-  font-size: 1em;
-}
-
-.grid-row > p > *, .grid-row > div[class*="kr-form-field"] > p * {
-  font-weight: normal;
-  font-size: 1em;
-}
-
-.grid-row > p, .grid-row > div[class*="kr-form-field"] > p {
-  font-weight: bold;
-  font-size: 1vw;
-}
-
-.grid-row > p > *, .grid-row > div[class*="kr-form-field"] > p * {
-  font-weight: normal;
-  font-size: 1vw;
-}
-
+div.grid-cell-5  {width: 5%;}
 div.grid-cell-10 {width: 10%;}
 div.grid-cell-20 {width: 20%;}
 div.grid-cell-25 {width: 25%;}
@@ -257,12 +248,9 @@ div.grid-cell-80 {width: 80%;}
 div.grid-cell-90 {width: 90%;}
 div.grid-cell-100 {width: 100%;}
 
-@media screen and (max-width: 1280px){
-  .project {
-    width: 200px;
-  }
+@media screen and (max-width: 1620px){
 
-  .grid-row {
+  div[class*="grid-cell-"] {
     display: inline-block !important;
   }
 }

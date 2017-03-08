@@ -1,19 +1,20 @@
+<h3 class="active-elem-title">Active element</h3>
 <div *ngIf="isFeature">
-  <feature-detail [feature]="element"></feature-detail>
+  <feature-detail [element]="element" [createElement]="false" [onElementChange]="onElementChange"></feature-detail>
 </div>
 
 <div *ngIf="isProject">
-  <project-detail [project]="element"></project-detail>
+  <project-detail [element]="element" [createElement]="false" [onElementChange]="onElementChange"></project-detail>
 </div>
 
 <div *ngIf="isRelease">
-  <release-detail [release]="element"></release-detail>
+  <release-detail [element]="element" [createElement]="false" [onElementChange]="onElementChange"></release-detail>
 </div>
 
 <div *ngIf="isResource">
-  <resource-detail [resource]="element"></resource-detail>
+  <resource-detail [element]="element" [createElement]="false" [onElementChange]="onElementChange"></resource-detail>
 </div>
 
 <div *ngIf="isSkill">
-  <skill-detail [skill]="element"></skill-detail>
+  <skill-detail [element]="element" [createElement]="false" [onElementChange]="onElementChange"></skill-detail>
 </div>

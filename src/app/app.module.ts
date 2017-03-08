@@ -6,14 +6,19 @@ import { HttpModule } from '@angular/http';
 import { ControllerService } from './services/controller.service';
 
 import { AppComponent } from './app.component';
-import {ProjectDetailComponent} from "./project/project-detail.component";
-import {FeatureDetailComponent} from "./feature/feature-detail.component";
-import {ResourceDetailComponent} from "./resource/resource-detail.component";
-import {SkillDetailComponent} from "./skill/skill-detail.component";
-import {ReleaseDetailComponent} from "./release/release-detail.component";
+import {ProjectDetailComponent} from "./detail-view/ts/project-detail.component";
+import {FeatureDetailComponent} from "./detail-view/ts/feature-detail.component";
+import {ResourceDetailComponent} from "./detail-view/ts/resource-detail.component";
+import {SkillDetailComponent} from "./detail-view/ts/skill-detail.component";
+import {ReleaseDetailComponent} from "./detail-view/ts/release-detail.component";
 import {AppRoutingModule} from "./app-routing.module";
 import {ElementListComponent} from "./relations/element-list.component";
 import {ActiveElementComponent} from "./relations/active-element.component";
+import {ChangeRecordService} from "./services/change-record.service";
+import {ElementDetailComponent} from "./detail-view/ts/element-detail.component";
+import {ChangeRecordComponent} from "./record/change-record.component";
+import {CollapseDirective} from "./directives/collapse";
+import {RecordDetailComponent} from "./record/record-detail.component";
 
 @NgModule({
   declarations: [
@@ -24,7 +29,11 @@ import {ActiveElementComponent} from "./relations/active-element.component";
     SkillDetailComponent,
     ReleaseDetailComponent,
     ElementListComponent,
-    ActiveElementComponent
+    ActiveElementComponent,
+    ElementDetailComponent,
+    ChangeRecordComponent,
+    RecordDetailComponent,
+    CollapseDirective
   ],
   imports: [
     BrowserModule,
@@ -32,7 +41,7 @@ import {ActiveElementComponent} from "./relations/active-element.component";
     HttpModule,
     AppRoutingModule
   ],
-  providers: [ ControllerService ],
+  providers: [ ControllerService, ChangeRecordService ],
   bootstrap: [ AppComponent ]
 })
 export class AppModule { }

@@ -1,37 +1,72 @@
 import {Resource} from "./resource";
 import {Config} from "../config";
 import {Log} from "../log";
-export class Release {
+import {ReplanElement} from "./replan-element";
+import {ReplanElemType} from "./replan-elem-type";
+import {Record} from "../services/record";
+import {RecordType} from "../services/record-type";
+
+export class Release extends ReplanElement {
+
+  attributes: string[] = ['id', 'name', 'description', 'deadline', 'resourceIds'];
+  resourceIds: number[] = [];
 
   constructor(
-    public id: number,
-    public name: string,
-    public description: string,
+    id: number,
+    name: string,
+    description: string,
     public deadline: string,
     public resources: Resource[]
-  ) {}
+  ) {
+    super(id, name, description, ReplanElemType.RELEASE);
+    if (this.resources) this.resources.forEach(resource => this.resourceIds.push(resource.id));
 
-  setDummyValues() {
-    this.id = 1;
-    this.name = "My dummy release";
-    this.description = "A dummy release used to test the html template used for every other release";
-    this.deadline = "05/05/2017";
+    this.attributes.forEach(attr => this.addChange(attr, this[attr]));
   }
 
-  static fromJSON(j: any): Release {
+  static fromJSON(j: any, cache: Boolean): Release {
     if (!Config.suppressElementCreationMessages) Log.i('Creating Release from:', j);
-    return new Release(
+    let rel = new Release(
       j.id,
       j.name,
       j.description,
       j.deadline,
       Resource.fromJSONArray(j.resources)
     );
+    if (cache) ReplanElement.staticDataService.cacheElement(rel);
+    return rel;
   }
 
   static fromJSONArray(j: any): Release[] {
     let releases: Release[] = [];
-    j.forEach(release => releases.push(this.fromJSON(release)));
+    j.forEach(release => releases.push(this.fromJSON(release, true)));
     return releases;
+  }
+
+
+  clone(): ReplanElement {
+    let aux = new Release(
+      this.id,
+      this.name,
+      this.description,
+      this.deadline,
+      this.resources
+    );
+    aux.oldValues = JSON.parse(JSON.stringify(this.oldValues));
+    return aux;
+  }
+
+  /* GATEWAY */
+  save(addRecord: Boolean): void {
+    this.dataService.createRelease(this)
+      .then(response => {
+        let res = Release.fromJSON(response.json(), false);
+        this.attributes.forEach(attr => this[attr] = res[attr]);
+        this.dataService.cacheElement(this)
+
+        if (addRecord) this.changeRecordService.addRecord(new Record(this, RecordType.CREATION));
+
+        this.onElementChange.onElementCreated(this);
+      });
   }
 }

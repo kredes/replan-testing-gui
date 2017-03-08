@@ -1,0 +1,116 @@
+<div class="project">
+  <div class="title">
+    <span class="element-type">Resource</span>
+
+    <h3>{{element.name}}</h3>
+  </div>
+
+  <div class="details">
+    <form class="centered">
+      <!-- Row 1 -->
+      <div class="grid-row">
+        <div class="grid-cell-20 labeled">
+          <label>id</label>
+          <input disabled type="text" value="{{element.id}}" />
+        </div>
+
+        <div class="grid-cell-50 labeled">
+          <label>name</label>
+          <input #a (blur)="element.name=a.value" name="name" type="text" value="{{createElement ? '' : element.name}}" />
+        </div>
+
+        <div class="grid-cell-30 labeled">
+          <label>availability</label>
+          <input #b (blur)="element.availability=b.value" name="availability" type="text" value="{{createElement ? '' : element.availability}}" />
+        </div>
+      </div>
+      <!-- /Row 1 -->
+
+      <!-- Row 2 -->
+      <div class="grid-row">
+        <div class="grid-cell-100 labeled">
+          <label>description</label>
+          <textarea #c (blur)="element.description=c.value" name="description">{{createElement ? '' : element.description}}</textarea>
+        </div>
+      </div>
+      <!-- /Row 2 -->
+
+      <!-- Row 3 -->
+      <div class="grid-row">
+        <div class="grid-cell-100 labeled">
+          <label>assigned to project</label>
+          <select (change)="assignToProject($event.target.value)">
+            <option value="1">Project 1</option>
+            <option value="2">Project 2</option>
+          </select>
+        </div>
+      </div>
+      <!-- /Row 3 -->
+
+      <!-- Row 4 -->
+      <div class="grid-row">
+        <div class="grid-cell-100 labeled">
+          <label>assigned to release</label>
+          <select (change)="assignToRelease($event.target.value)">
+            <option value="1">Release 1</option>
+            <option value="2">Release 2</option>
+          </select>
+        </div>
+      </div>
+      <!-- /Row 4 -->
+
+      <!-- Row 5 -->
+      <div class="grid-row">
+        <div class="grid-cell-100 labeled">
+          <label>skills</label>
+          <!-- TODO: Make this expandable so it doesn't take up a shitton of space-->
+          <div class="checkbox-box">
+            <!-- TODO: This should be for each skill of the PROJECT -->
+            <span *ngIf="element.skills && element.skills.length > 0">
+              <label *ngFor="let skill of element.skills">
+                <input checked type="checkbox" name="skill-{{skill.id}}" value="skill-{{skill.id}}"/>
+                {{skill.name}}
+              </label>
+            </span>
+
+            <!-- TODO: Double-link a Resource with its Project -->
+            <span *ngFor="let skill of this.element.dataService.getSkillsOf(this.element.project)">
+              <label *ngFor="let skill of element.skills">
+                <input checked type="checkbox" name="skill-{{skill.id}}" value="skill-{{skill.id}}"/>
+                {{skill.name}}
+              </label>
+            </span>
+          </div>
+        </div>
+      </div>
+      <!-- /Row 5 -->
+
+      <!-- Buttons -->
+      <div *ngIf="!createElement" class="grid-row">
+        <div class="grid-cell-33 delete-button">
+          <button (click)="remove()">Delete</button>
+        </div>
+
+        <div class="grid-cell-33 save-button">
+          <button (click)="onElementSelected(this.element)">Select</button>
+        </div>
+
+        <div class="grid-cell-33 save-button">
+          <button (click)="update()">Save</button>
+        </div>
+      </div>
+
+      <div *ngIf="createElement">
+        <div class="grid-cell-50 delete-button">
+          <button (click)="cancelCreation()">Cancel</button>
+        </div>
+        <div class="grid-cell-50 save-button">
+          <button (click)="save()">Save</button>
+        </div>
+      </div>
+      <!-- /Buttons -->
+    </form>
+    <div class="clear"></div>
+  </div>
+  <div class="clear"></div>
+</div>

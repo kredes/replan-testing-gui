@@ -1,32 +1,63 @@
 import {Config} from "../config";
 import {Log} from "../log";
-export class Skill {
+import {ReplanElement} from "./replan-element";
+import {ReplanElemType} from "./replan-elem-type";
+import {Record} from "../services/record";
+import {RecordType} from "../services/record-type";
+
+export class Skill extends ReplanElement {
+
+  attributes: string[] = ['id', 'name', 'description'];
 
   constructor(
-    public id: number,
-    public name: string,
-    public description: string
-  ) {}
-
-  setDummyValues() {
-    this.id = 1;
-    this.name = "My dummy skill";
-    this.description = "A dummy skill used to test the html template used for every other skill";
+    id: number,
+    name: string,
+    description: string
+  ) {
+    super(id, name, description, ReplanElemType.SKILL);
+    this.attributes.forEach(attr => this.addChange(attr, this[attr]));
   }
 
-  static fromJSON(j: any): Skill {
+  static fromJSON(j: any, cache: Boolean): Skill {
     if (!Config.suppressElementCreationMessages) Log.i('Creating Skill from:', j);
-    return new Skill(
+    let s = new Skill(
       j.id,
       j.name,
       j.description
     );
+    if (cache) ReplanElement.staticDataService.cacheElement(s);
+    return s;
   }
 
   static fromJSONArray(j: any): Skill[] {
     if (!Config.suppressElementCreationMessages) Log.i('Creating several Skills from:', j);
     let skills: Skill[] = [];
-    j.forEach(skill => skills.push(this.fromJSON(skill)));
+    j.forEach(skill => skills.push(this.fromJSON(skill, true)));
     return skills;
+  }
+
+
+  clone(): ReplanElement {
+    let aux = new Skill(
+      this.id,
+      this.name,
+      this.description
+    );
+    aux.oldValues = JSON.parse(JSON.stringify(this.oldValues));
+    return aux;
+  }
+
+  /* GATEWAY */
+  save(addRecord: Boolean): void {
+    this.dataService.createSkill(this)
+      .then(response => {
+        let res = Skill.fromJSON(response.json(), false);
+        this.attributes.forEach(attr => this[attr] = res[attr]);
+        this.dataService.cacheElement(this)
+
+        if (addRecord) this.changeRecordService.addRecord(new Record(this, RecordType.CREATION));
+
+        this.onElementChange.onElementCreated(this);
+      });
   }
 }

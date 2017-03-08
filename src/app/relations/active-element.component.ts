@@ -1,19 +1,23 @@
-import {Component, OnInit, Input} from "@angular/core";
+import {Component, OnInit, Input, OnChanges} from "@angular/core";
 import {Release} from "../domain/release";
 import {Feature} from "../domain/feature";
 import {Resource} from "../domain/resource";
 import {Skill} from "../domain/skill";
 import {Project} from "../domain/project";
+import {OnElementChange} from "../detail-view/ts/on-element-change";
+import {ReplanElement} from "../domain/replan-element";
+
 
 @Component({
   moduleId: module.id,
   selector: 'active-element',
   templateUrl: 'active-element.component.html',
-  styleUrls: ['../styles.css']
+  styleUrls: ['../styles.css', './active-element.component.css']
 })
-export class ActiveElementComponent implements OnInit {
-  @Input()
-  element: any;
+export class ActiveElementComponent implements OnChanges {
+  @Input() element: ReplanElement;
+  @Input() onElementChange: OnElementChange;
+
 
   public isFeature: boolean;
   public isRelease: boolean;
@@ -21,7 +25,8 @@ export class ActiveElementComponent implements OnInit {
   public isSkill: boolean;
   public isProject: boolean;
 
-  ngOnInit(): void {
+  ngOnChanges(): void {
+    this.isFeature = this.isProject = this.isRelease = this.isResource = this.isSkill = false;
     if (this.element instanceof Feature) this.isFeature = true;
     else if (this.element instanceof Release) this.isRelease = true;
     else if (this.element instanceof Resource) this.isResource = true;
