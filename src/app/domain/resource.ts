@@ -5,12 +5,17 @@ import {ReplanElement} from "./replan-element";
 import {ReplanElemType} from "./replan-elem-type";
 import {Record} from "../services/record";
 import {RecordType} from "../services/record-type";
+import {Project} from "./project";
+import {OnChanges} from "@angular/core";
+import {Release} from "./release";
 
-export class Resource extends ReplanElement {
+export class Resource extends ReplanElement implements OnChanges {
 
   attributes: string[] = ['id', 'name', 'description', 'availability', 'skillIds'];
 
   skillIds: number[] = [];
+  project: Project;
+  release: Release;
 
   constructor(
     id: number,
@@ -23,11 +28,7 @@ export class Resource extends ReplanElement {
     if (this.skills) this.skills.forEach(skill => this.skillIds.push(skill.id));
 
     this.attributes.forEach(attr => this.addChange(attr, this[attr]));
-
-    console.log("Resource", this.name, "has the following Skills", this.skills);
   }
-
-
 
   static fromJSON(j: any, cache: Boolean): Resource {
     if (!Config.suppressElementCreationMessages) Log.i('Creating Resource from:', j);
@@ -44,6 +45,7 @@ export class Resource extends ReplanElement {
   }
 
   static fromJSONArray(j: any): Resource[] {
+    if (!Config.suppressElementCreationMessages) Log.i('Creating several resources from:', j);
     let resources: Resource[] = [];
     j.forEach(resource => resources.push(this.fromJSON(resource, true)));
     return resources;
@@ -73,5 +75,16 @@ export class Resource extends ReplanElement {
         if (addRecord) this.changeRecordService.addRecord(new Record(this, RecordType.CREATION));
         this.onElementChange.onElementCreated(this);
       });
+  }
+
+  ngOnChanges(): void {
+    console.log("Project of resource", this.id, this.project);
+  }
+
+  hasSkill(skill: Skill): Boolean {
+    this.skills.forEach(s => {
+      if (s.id == skill.id) return true;
+    });
+    return false;
   }
 }

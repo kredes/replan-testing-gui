@@ -6,10 +6,16 @@ import {ReplanElement} from "./replan-element";
 import {ReplanElemType} from "./replan-elem-type";
 import {Record} from "../services/record";
 import {RecordType} from "../services/record-type";
+import {Skill} from "./skill";
+import {Release} from "./release";
 
 export class Project extends ReplanElement {
 
   resourceIds: number[] = [];
+
+  skills: Skill[];
+  features: Feature[];
+  releases: Release[];
 
   constructor(
     id: number,
@@ -21,7 +27,22 @@ export class Project extends ReplanElement {
     public resources: Resource[]
   ) {
     super(id, name, description, ReplanElemType.PROJECT);
-    this.resources.forEach(resource => this.resourceIds.push(resource.id));
+    this.resources.forEach(resource => {
+      this.resourceIds.push(resource.id);
+      resource.project = this;
+    });
+
+    this.dataService.getSkillsOf(this)
+      .then(skills =>  this.skills = skills);
+
+    this.dataService.getFeaturesOf(this)
+      .then(features => {
+        this.features = features;
+        features.forEach(feature => feature.project = this);
+      });
+
+    this.dataService.getReleasesOf(this)
+      .then(releases => this.releases = releases);
 
     this.addChange('effort_unit', this.effort_unit);
     this.addChange('hours_per_effort_unit', this.hours_per_effort_unit);
@@ -30,6 +51,13 @@ export class Project extends ReplanElement {
     this.addChange('resourceIds', this.resourceIds);
   }
 
+  getSkills(): Skill[] {
+    let aux: Skill[];
+    this.dataService.getSkillsOf(this)
+      .then(skills => aux = skills);
+    console.log(aux);
+    return aux;
+  }
 
   static fromJSON(j: any): Project {
     if (!Config.suppressElementCreationMessages) Log.i('Creating Project from:', j);
@@ -67,6 +95,6 @@ export class Project extends ReplanElement {
 
   /* GATEWAY */
   save(): void {
-    // No API call to create a Project
+    // TODO: There's a new call for this now
   }
 }

@@ -12,8 +12,11 @@ import {ReplanElemType} from "../domain/replan-elem-type";
 
 @Injectable()
 export class ControllerService {
-  private apiUrl = 'http://localhost:3000/api/ui/v1';
-  private basePath = 'http://localhost:3000/api/ui/v1/projects/1';
+  //private apiUrl = 'http://localhost:3000/api/ui/v1';
+  private apiUrl = 'http://62.14.219.13:8280/replan';
+  private basePath: string;
+  currentProjectId: number;
+  //= 'http://localhost:3000/api/ui/v1/projects/1';
 
   /* My little cache indexed by id */
   // TODO: Simplify to {ReplanElemType: [{id: element}]}
@@ -23,7 +26,18 @@ export class ControllerService {
   private releases: Object = {};
   private skills: Object = {};
 
-  constructor(private http: Http) {}
+  constructor(private http: Http) {
+    this.setActiveProject(1);
+  }
+
+  setActiveProject(projId: number) {
+    this.currentProjectId = projId;
+    this.basePath = this.apiUrl + '/projects/' + projId;
+  }
+
+  /*
+    TODO TODO TODO: Generalize everything for more than one Project
+  */
 
 
   /* GENERIC METHODS */
@@ -182,8 +196,25 @@ export class ControllerService {
   }
 
   getResourcesOf(element: any): Promise<Resource[]> {
+    // Cache is probably a very bad idea right now
+    let path: string = null;
+
+    if (element instanceof Project) path = this.basePath + '/resources';
+    else if (element instanceof Release) return Promise.resolve(element.resources);
+
+    if (path) {
+      return this.http.get(path)
+        .toPromise()
+        .then(response => Resource.fromJSONArray(response.json()))
+        .catch(this.handleError);
+    } else {
+      console.error("The element supplied cannnot have resources associated.");
+    }
+    return null;
+
+    /*
     if (element instanceof Project || element instanceof Release) {
-      console.log(element);
+      // Cache is a very bad idea
       let resourceIds = element.resourceIds;
 
       // Get as many cached resources as possible.
@@ -199,6 +230,7 @@ export class ControllerService {
         });
         console.debug("Found", resources.length, "out of", element.resourceIds.length, "resources in cache.");
       }
+
 
       // Get the remaining resources (if any) from the server
       if (resourceIds.length > resources.length) {
@@ -225,6 +257,7 @@ export class ControllerService {
       console.error("The element supplied cannnot have resources associated.");
     }
     return null;
+    */
   }
 
   getSkillsOf(element: any): Promise<Skill[]> {
@@ -400,5 +433,101 @@ export class ControllerService {
 
 
   /* ADD X TO Y */
-  // Coming soon
+  addSkillsToFeature(feature: Feature, skillIds: number[]) {
+    this.http.post(this.basePath + '/features/' + feature.id + '/skills', JSON.stringify(skillIds))
+      .toPromise()
+      .then(response => response)
+      .catch(this.handleError);
+  }
+
+  addSkillsToResource(res: Resource, skillIds: number[]) {
+    this.http.post(this.basePath + '/resources/' + res.id + '/skills', JSON.stringify(skillIds))
+      .toPromise()
+      .then(response => response)
+      .catch(this.handleError);
+  }
+
+  addResourceToProject(res: Resource) {
+    let body = {
+      'name': res.name,
+      'description': res.description,
+      'availability': res.availability
+    }
+    return this.http.post(
+      this.basePath + '/resources/' + res.id, body)
+      .toPromise()
+      .then(response => response)
+      .catch(this.handleError)
+  }
+
+  addResourceToRelease(res: Resource, relId: number) {
+    let body = [res.id];
+    return this.http.post(
+      this.basePath + '/releases/' + relId + '/resources', JSON.stringify(body))
+      .toPromise()
+      .then(response => response)
+      .catch(this.handleError)
+  }
+
+
+  /* REMOVE X FROM Y */
+  removeSkillsFromFeature(feature: Feature, skillIds: number[]) {
+    let config = {
+      params: {
+        'skillId': skillIds
+      }
+    };
+    this.http.post(this.basePath + '/features/' + feature.id + '/skills', config)
+      .toPromise()
+      .then(response => response)
+      .catch(this.handleError);
+  }
+
+  removeSkillsFromResource(res: Resource, skillIds: number[]) {
+    let config = {
+      params: {
+        'skillId': skillIds
+      }
+    };
+    this.http.post(this.basePath + '/resources/' + res.id + '/skills', config)
+      .toPromise()
+      .then(response => response)
+      .catch(this.handleError);
+  }
+
+  removeResourceFromProject(res: Resource) {
+    return this.http.delete(
+      this.basePath + '/resources/' + res.id)
+      .toPromise()
+      .then(response => response)
+      .catch(this.handleError)
+  }
+
+  removeResourceFromRelease(res: Resource, relId: number) {
+    let config = {
+      params: [res.id]
+    };
+    return this.http.delete(
+      this.basePath + '/releases/' + relId + '/resources/' + res.id, config)
+      .toPromise()
+      .then(response => response)
+      .catch(this.handleError)
+  }
+
+
+
+  /* MOVE X TO Y */
+  moveResourceToProject(res: Resource, newProjId: number) {
+    this.removeResourceFromProject(res);
+    let aux = this.currentProjectId;
+
+    this.setActiveProject(newProjId);
+    this.addResourceToProject(res);
+    this.setActiveProject(aux);
+  }
+
+  moveResourceToRelease(res: Resource, oldRelId: number, newRelId: number) {
+    this.removeResourceFromRelease(res, oldRelId);
+    this.addResourceToRelease(res, newRelId);
+  }
 }

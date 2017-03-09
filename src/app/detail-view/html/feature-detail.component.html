@@ -59,12 +59,25 @@
           <label>required skills</label>
           <!-- TODO: Make this expandable so it doesn't take up a shitton of space-->
           <div class="checkbox-box">
-            <!-- TODO: This should be for each skill of the PROJECT -->
-            <label *ngFor="let skill of element.required_skills">
-              <input (change)="onSkillStateChange($event)"
-                checked type="checkbox" name="skill-{{skill.id}}" value="{{skill.id}}"/>
-              {{skill.name}}
-            </label>
+
+            <span *ngIf="element.required_skills && element.required_skills.length > 0">
+              <label *ngFor="let skill of element.required_skills">
+                <input (change)="onSkillStateChange($event)"
+                  checked type="checkbox" name="skill-{{skill.id}}" value="{{skill.id}}"/>
+                {{skill.name}}
+              </label>
+            </span>
+
+            <span *ngIf="this.element.project">
+              <span *ngFor="let skill of this.nonSelectedSkills()" style="display: inline;">
+                <label>
+                  <input (change)="onSkillStateChange($event)"
+                         type="checkbox" name="skill-{{skill.id}}" value="{{skill.id}}"/>
+                  {{skill.name}}
+                </label>
+              </span>
+            </span>
+
           </div>
         </div>
       </div>
@@ -76,7 +89,6 @@
           <label>depends on</label>
           <!-- TODO: Make this expandable so it doesn't take up a shitton of space-->
           <div class="checkbox-box">
-            <!-- TODO: This should be for each skill of the PROJECT -->
             <label *ngFor="let feature of element.depends_on">
               <input (change)="onDependencyStateChange($event)"
                 checked type="checkbox" name="feature-{{feature.id}}" value="{{feature.id}}"/>

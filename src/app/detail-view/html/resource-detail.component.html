@@ -51,9 +51,13 @@
       <div class="grid-row">
         <div class="grid-cell-100 labeled">
           <label>assigned to release</label>
-          <select (change)="assignToRelease($event.target.value)">
-            <option value="1">Release 1</option>
-            <option value="2">Release 2</option>
+          <select *ngIf="this.element.project.releases && this.element.release" (change)="assignToRelease($event.target.value)">
+            <!--
+            <option *ngFor="let release of this.element.project.releases"
+                    selected="{{release.id == this.element.release.id ? true : null}}" value="{{release.id}}">{{release.name}}</option>
+            -->
+            <option>Release 1</option>
+            <option>Release 2</option>
           </select>
         </div>
       </div>
@@ -65,20 +69,21 @@
           <label>skills</label>
           <!-- TODO: Make this expandable so it doesn't take up a shitton of space-->
           <div class="checkbox-box">
-            <!-- TODO: This should be for each skill of the PROJECT -->
             <span *ngIf="element.skills && element.skills.length > 0">
               <label *ngFor="let skill of element.skills">
-                <input checked type="checkbox" name="skill-{{skill.id}}" value="skill-{{skill.id}}"/>
+                <input (change)="onSkillStateChange($event)"
+                  checked type="checkbox" name="skill-{{skill.id}}" value="{{skill.id}}"/>
                 {{skill.name}}
               </label>
             </span>
 
-            <!-- TODO: Double-link a Resource with its Project -->
-            <span *ngFor="let skill of this.element.dataService.getSkillsOf(this.element.project)">
-              <label *ngFor="let skill of element.skills">
-                <input checked type="checkbox" name="skill-{{skill.id}}" value="skill-{{skill.id}}"/>
-                {{skill.name}}
-              </label>
+            <span *ngIf="this.element.project.skills">
+              <span *ngFor="let skill of this.nonSelectedSkills()" style="display: inline;">
+                <label>
+                  <input type="checkbox" name="{{skill.id}}" value="skill-{{skill.id}}"/>
+                  {{skill.name}}
+                </label>
+              </span>
             </span>
           </div>
         </div>

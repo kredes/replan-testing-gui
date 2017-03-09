@@ -6,6 +6,7 @@ import {ReplanElement} from "./replan-element";
 import {ReplanElemType} from "./replan-elem-type";
 import {Record} from "../services/record";
 import {RecordType} from "../services/record-type";
+import {Project} from "./project";
 
 export class Feature extends ReplanElement {
 
@@ -13,6 +14,7 @@ export class Feature extends ReplanElement {
 
   requiredSkillsIds: number[] = [];
   featureDependencyIds: number[] = [];
+  project: Project;
 
   constructor(
     id: number,
@@ -56,7 +58,6 @@ export class Feature extends ReplanElement {
     for (let i = 0; i < j.length; ++i) {
       features.push(Feature.fromJSON(j[i]));
     }
-
     return features;
   }
 
@@ -80,5 +81,24 @@ export class Feature extends ReplanElement {
   /* GATEWAY */
   save(): void {
     // No API call to create a Feature
+  }
+
+  hasSkill(skill: Skill): Boolean {
+    this.required_skills.forEach(s => {
+      if (s.id == skill.id) {
+        console.log("true");
+        return true;
+      }
+    });
+    console.log("false");
+    return false;
+  }
+
+  addSkill(s: Skill): void {
+    this.required_skills.push(s);
+  }
+
+  removeSkill(s: Skill): void {
+    this.required_skills.splice(this.required_skills.indexOf(s), 1);
   }
 }

@@ -22,6 +22,7 @@ export class Release extends ReplanElement {
     if (this.resources) this.resources.forEach(resource => this.resourceIds.push(resource.id));
 
     this.attributes.forEach(attr => this.addChange(attr, this[attr]));
+    this.resources.forEach(r => r.release = this);
   }
 
   static fromJSON(j: any, cache: Boolean): Release {

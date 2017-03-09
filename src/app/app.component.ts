@@ -6,6 +6,10 @@ import {ReplanElement} from "./domain/replan-element";
 import {and} from "@angular/router/src/utils/collection";
 import {ReplanElemType} from "./domain/replan-elem-type";
 import {OnElementChange} from "./detail-view/ts/on-element-change";
+import {element} from "protractor";
+import {Release} from "./domain/release";
+import {Resource} from "./domain/resource";
+import {Feature} from "./domain/feature";
 
 @Component({
   selector: 'app-root',
@@ -77,22 +81,21 @@ export class AppComponent implements OnInit, OnElementChange {
 
   onTabSelected(tab: string): void {
     // Update related items
+    let elem = this.activeElement;
     switch (tab) {
       case 'Resources':
-        this.controllerService.getResourcesOf(this.activeElement)
-          .then(resources => this.relatedElements = resources);
+        if (elem instanceof Project || elem instanceof Release) this.relatedElements = elem.resources;
         break;
       case 'Features':
-        this.controllerService.getFeaturesOf(this.activeElement)
-          .then(features => this.relatedElements = features);
+        if (elem instanceof Project) this.relatedElements = elem.features;
         break;
       case 'Releases':
         this.controllerService.getReleasesOf(this.activeElement)
           .then(releases => this.relatedElements = releases);
         break;
       case 'Skills':
-        this.controllerService.getSkillsOf(this.activeElement)
-          .then(skills => this.relatedElements = skills);
+        if (elem instanceof Project ||elem instanceof Resource) this.relatedElements = elem.skills;
+        else if (elem instanceof Feature) this.relatedElements = elem.required_skills;
         break;
       case 'None':
       default:
@@ -100,8 +103,10 @@ export class AppComponent implements OnInit, OnElementChange {
         break;
     }
     this.selectedTab = tab;
+    /*
     console.debug("Selected tab:", this.selectedTab);
     console.debug("Valid tabs:", this.validTabs);
+    */
   }
 
   newElement(): void {
@@ -110,12 +115,9 @@ export class AppComponent implements OnInit, OnElementChange {
 
   onElementCreated(element: ReplanElement): void {
     console.info("Called onElementCreated at app.component.ts", element);
-    // TODO: Change this hardcoded shit
-    if (element.type == ReplanElemType["RESOURCE"]) {
-      console.debug("OK", this.relatedElements);
-      this.relatedElements.push(element);
-      console.log(this.relatedElements);
-    }
+    // TODO: Change this hardcoded shit;
+    this.relatedElements.push(element);
+    console.log(this.relatedElements);
     this.createElement = false;
   }
 

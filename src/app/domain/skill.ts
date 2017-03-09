@@ -8,6 +8,7 @@ import {RecordType} from "../services/record-type";
 export class Skill extends ReplanElement {
 
   attributes: string[] = ['id', 'name', 'description'];
+  static cache: Object = {};
 
   constructor(
     id: number,
@@ -20,13 +21,23 @@ export class Skill extends ReplanElement {
 
   static fromJSON(j: any, cache: Boolean): Skill {
     if (!Config.suppressElementCreationMessages) Log.i('Creating Skill from:', j);
-    let s = new Skill(
-      j.id,
-      j.name,
-      j.description
-    );
-    if (cache) ReplanElement.staticDataService.cacheElement(s);
-    return s;
+
+    if (this.cache[j.id]) return this.cache[j.id];
+    else {
+      let s = new Skill(
+        j.id,
+        j.name,
+        j.description
+      );
+      this.cache[j.id] = s;
+      return s;
+    }
+    //if (cache) ReplanElement.staticDataService.cacheElement(s);
+    //return s;
+  }
+
+  static getById(id: number): Skill {
+    return this.cache[id];
   }
 
   static fromJSONArray(j: any): Skill[] {
