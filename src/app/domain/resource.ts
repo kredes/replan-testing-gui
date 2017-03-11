@@ -15,7 +15,9 @@ export class Resource extends ReplanElement implements OnChanges {
 
   skillIds: number[] = [];
   project: Project;
-  release: Release;
+  releases: Release[];
+
+  cache: Resource[];
 
   constructor(
     id: number,
@@ -32,16 +34,24 @@ export class Resource extends ReplanElement implements OnChanges {
 
   static fromJSON(j: any, cache: Boolean): Resource {
     if (!Config.suppressElementCreationMessages) Log.i('Creating Resource from:', j);
-    // TODO: If dataService.getResource(id) is not null (is cached)...
-    let res = new Resource(
-      j.id,
-      j.name,
-      j.description,
-      j.availability,
-      Skill.fromJSONArray(j.skills)
-    );
-    if(cache) ReplanElement.staticDataService.cacheElement(res);
-    return res;
+
+
+    let aux = ReplanElement.staticDataService.getCachedResource(j.id);
+    if (aux) {
+      console.log("Got a resource that was cached");
+      return aux;
+    }
+    else {
+      let res = new Resource(
+        j.id,
+        j.name,
+        j.description,
+        j.availability,
+        Skill.fromJSONArray(j.skills)
+      );
+      ReplanElement.staticDataService.cacheElement(res);
+      return res;
+    }
   }
 
   static fromJSONArray(j: any): Resource[] {
@@ -58,8 +68,11 @@ export class Resource extends ReplanElement implements OnChanges {
       this.name,
       this.description,
       this.availability,
-      this.skills
+      []
     );
+    aux.project = this.project;
+    if (this.releases) this.releases.forEach(r => aux.addRelease(r));
+    if (this.skills) this.skills.forEach(s => aux.skills.push(s));
     aux.oldValues = JSON.parse(JSON.stringify(this.oldValues));
     aux.onElementChange = this.onElementChange;
     return aux;
@@ -86,5 +99,10 @@ export class Resource extends ReplanElement implements OnChanges {
       if (s.id == skill.id) return true;
     });
     return false;
+  }
+
+  addRelease(r: Release): void {
+    if (!this.releases) this.releases = [];
+    this.releases.push(r);
   }
 }

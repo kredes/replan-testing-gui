@@ -49,7 +49,6 @@ export class Project extends ReplanElement {
     this.addChange('hours_per_week_and_full_time_resource', this.hours_per_week_and_full_time_resource);
     this.addChange('resources', this.resources);
     this.addChange('resourceIds', this.resourceIds);
-
   }
 
   getSkills(): Skill[] {
@@ -62,15 +61,22 @@ export class Project extends ReplanElement {
 
   static fromJSON(j: any): Project {
     if (!Config.suppressElementCreationMessages) Log.i('Creating Project from:', j);
-    return new Project(
-      j.id,
-      j.name,
-      j.description,
-      j.effort_unit,
-      j.hours_per_effort_unit,
-      j.hours_per_week_and_full_time_resource,
-      Resource.fromJSONArray(j.resources)
-    );
+
+    let aux = ReplanElement.staticDataService.getCachedProject(j.id);
+    if (aux) return aux;
+    else {
+      let p = new Project(
+        j.id,
+        j.name,
+        j.description,
+        j.effort_unit,
+        j.hours_per_effort_unit,
+        j.hours_per_week_and_full_time_resource,
+        Resource.fromJSONArray(j.resources)
+      );
+      ReplanElement.staticDataService.cacheElement(p);
+      return p;
+    }
   }
 
   static fromJSONArray(j: any): Project[] {
@@ -88,8 +94,9 @@ export class Project extends ReplanElement {
       this.effort_unit,
       this.hours_per_effort_unit,
       this.hours_per_week_and_full_time_resource,
-      this.resources
+      []
     );
+    if (this.resources) this.resources.forEach(r => aux.resources.push(r));
     aux.oldValues = JSON.parse(JSON.stringify(this.oldValues));
     return aux;
   }

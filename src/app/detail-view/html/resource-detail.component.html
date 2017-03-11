@@ -36,9 +36,9 @@
       <!-- /Row 2 -->
 
       <!-- Row 3 -->
-      <div class="grid-row">
+      <div *ngIf="!createElement && this.element.project" class="grid-row">
         <div class="grid-cell-100 labeled">
-          <label>assigned to project</label>
+          <label>assigned to projects</label>
           <select (change)="assignToProject($event.target.value)">
             <option value="1">Project 1</option>
             <option value="2">Project 2</option>
@@ -48,23 +48,33 @@
       <!-- /Row 3 -->
 
       <!-- Row 4 -->
-      <div class="grid-row">
+      <div *ngIf="!createElement && this.element.project" class="grid-row">
         <div class="grid-cell-100 labeled">
-          <label>assigned to release</label>
-          <select *ngIf="this.element.project.releases && this.element.release" (change)="assignToRelease($event.target.value)">
-            <!--
-            <option *ngFor="let release of this.element.project.releases"
-                    selected="{{release.id == this.element.release.id ? true : null}}" value="{{release.id}}">{{release.name}}</option>
-            -->
-            <option>Release 1</option>
-            <option>Release 2</option>
-          </select>
+          <label>assigned to releases</label>
+          <div class="checkbox-box">
+            <span *ngIf="element.releases && element.releases.length > 0">
+              <label *ngFor="let release of element.releases">
+                <input (change)="onReleaseStateChange($event)"
+                       checked type="checkbox" name="skill-{{release.id}}" value="{{release.id}}"/>
+                {{release.name}}
+              </label>
+            </span>
+
+            <span *ngIf="element.project.releases">
+              <span *ngFor="let release of this.nonSelectedReleases()" style="display: inline;">
+                <label>
+                  <input type="checkbox" name="{{release.id}}" value="skill-{{release.id}}"/>
+                  {{release.name}}
+                </label>
+              </span>
+            </span>
+          </div>
         </div>
       </div>
       <!-- /Row 4 -->
 
       <!-- Row 5 -->
-      <div class="grid-row">
+      <div *ngIf="!createElement && element.project" class="grid-row">
         <div class="grid-cell-100 labeled">
           <label>skills</label>
           <!-- TODO: Make this expandable so it doesn't take up a shitton of space-->
@@ -77,7 +87,7 @@
               </label>
             </span>
 
-            <span *ngIf="this.element.project.skills">
+            <span *ngIf="element.project.skills">
               <span *ngFor="let skill of this.nonSelectedSkills()" style="display: inline;">
                 <label>
                   <input type="checkbox" name="{{skill.id}}" value="skill-{{skill.id}}"/>

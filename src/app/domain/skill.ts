@@ -22,18 +22,17 @@ export class Skill extends ReplanElement {
   static fromJSON(j: any, cache: Boolean): Skill {
     if (!Config.suppressElementCreationMessages) Log.i('Creating Skill from:', j);
 
-    if (this.cache[j.id]) return this.cache[j.id];
+    let aux = ReplanElement.staticDataService.getCachedSkill(j.id);
+    if (aux) return aux;
     else {
       let s = new Skill(
         j.id,
         j.name,
         j.description
       );
-      this.cache[j.id] = s;
+      ReplanElement.staticDataService.cacheElement(s);
       return s;
     }
-    //if (cache) ReplanElement.staticDataService.cacheElement(s);
-    //return s;
   }
 
   static getById(id: number): Skill {
@@ -68,7 +67,7 @@ export class Skill extends ReplanElement {
       .then(response => {
         let res = Skill.fromJSON(response.json(), false);
         this.attributes.forEach(attr => this[attr] = res[attr]);
-        this.dataService.cacheElement(this)
+        this.dataService.cacheElement(this);
 
         if (addRecord) this.changeRecordService.addRecord(new Record(this, RecordType.CREATION));
 

@@ -15,27 +15,39 @@ export class Release extends ReplanElement {
     id: number,
     name: string,
     description: string,
+    public starts_at: string,
     public deadline: string,
     public resources: Resource[]
   ) {
     super(id, name, description, ReplanElemType.RELEASE);
-    if (this.resources) this.resources.forEach(resource => this.resourceIds.push(resource.id));
+    if (this.resources) this.resources.forEach(resource => {
+      this.resourceIds.push(resource.id);
+      resource.addRelease(this);
+    });
 
     this.attributes.forEach(attr => this.addChange(attr, this[attr]));
-    this.resources.forEach(r => r.release = this);
   }
 
   static fromJSON(j: any, cache: Boolean): Release {
     if (!Config.suppressElementCreationMessages) Log.i('Creating Release from:', j);
-    let rel = new Release(
-      j.id,
-      j.name,
-      j.description,
-      j.deadline,
-      Resource.fromJSONArray(j.resources)
-    );
-    if (cache) ReplanElement.staticDataService.cacheElement(rel);
-    return rel;
+
+    let aux = ReplanElement.staticDataService.getCachedRelease(j.id);
+    if (aux) {
+      console.debug("This RELEASE was cached:", aux);
+      return aux;
+    }
+    else {
+      let rel = new Release(
+        j.id,
+        j.name,
+        j.description,
+        j.starts_at,
+        j.deadline,
+        Resource.fromJSONArray(j.resources)
+      );
+      ReplanElement.staticDataService.cacheElement(rel);
+      return rel;
+    }
   }
 
   static fromJSONArray(j: any): Release[] {
@@ -50,9 +62,11 @@ export class Release extends ReplanElement {
       this.id,
       this.name,
       this.description,
+      this.starts_at,
       this.deadline,
-      this.resources
+      []
     );
+    if(this.resources) this.resources.forEach(r => aux.resources.push(r));
     aux.oldValues = JSON.parse(JSON.stringify(this.oldValues));
     return aux;
   }
@@ -63,7 +77,7 @@ export class Release extends ReplanElement {
       .then(response => {
         let res = Release.fromJSON(response.json(), false);
         this.attributes.forEach(attr => this[attr] = res[attr]);
-        this.dataService.cacheElement(this)
+        this.dataService.cacheElement(this);
 
         if (addRecord) this.changeRecordService.addRecord(new Record(this, RecordType.CREATION));
 

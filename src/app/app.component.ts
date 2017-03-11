@@ -11,6 +11,7 @@ import {Release} from "./domain/release";
 import {Resource} from "./domain/resource";
 import {Feature} from "./domain/feature";
 import {Skill} from "./domain/skill";
+import {Utils} from "./utils";
 
 @Component({
   selector: 'app-root',
@@ -81,29 +82,19 @@ export class AppComponent implements OnInit, OnElementChange {
     }
   }
 
-  waitForAttributeLoaded(attr: any): void {
-    if (!attr) {
-      console.log("Waiting attribute loading...");
-      setTimeout(this.waitForAttributeLoaded(attr), 100);
-    } else {
-      console.log("Attribute loaded:", attr);
-      return;
-    }
-  }
-
   onTabSelected(tab: string): void {
     // Update related items
     let elem = this.activeElement;
     switch (tab) {
       case 'Resources':
         if (elem instanceof Project || elem instanceof Release) {
-          this.waitForAttributeLoaded(elem.resources);
+          Utils.waitUntilExists(elem.resources);
           this.relatedElements = elem.resources;
         }
         break;
       case 'Features':
         if (elem instanceof Project) {
-          this.waitForAttributeLoaded(elem.features);
+          Utils.waitUntilExists(elem.features);
           this.relatedElements = elem.features;
         }
         break;
@@ -113,11 +104,11 @@ export class AppComponent implements OnInit, OnElementChange {
         break;
       case 'Skills':
         if (elem instanceof Project ||elem instanceof Resource) {
-          this.waitForAttributeLoaded(elem.skills);
+          Utils.waitUntilExists(elem.skills);
           this.relatedElements = elem.skills;
         }
         else if (elem instanceof Feature) {
-          this.waitForAttributeLoaded(elem.required_skills);
+          Utils.waitUntilExists(elem.required_skills);
           this.relatedElements = elem.required_skills;
         }
         break;
@@ -141,6 +132,11 @@ export class AppComponent implements OnInit, OnElementChange {
     console.info("Called onElementCreated at app.component.ts", element);
     this.relatedElements.push(element);
     console.log(this.relatedElements);
+
+    if (this.activeElement instanceof Project) {
+      if (element instanceof Resource || element instanceof Feature) element.project = this.activeElement;
+    }
+
     this.createElement = false;
   }
 

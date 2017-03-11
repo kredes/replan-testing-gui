@@ -32,11 +32,20 @@
       <!-- Row 3 -->
       <div class="grid-row">
         <div class="grid-cell-100 labeled">
-          <label>deadline</label>
-          <input #c (blur)="element.deadline=c.value" name="deadline" type="text" value="{{createElement ? '' : element.deadline}}" />
+          <label>starts at</label>
+          <input #c (blur)="element.starts_at=c.value" name="starts_at" type="text" value="{{createElement ? '' : element.starts_at}}" />
         </div>
       </div>
       <!-- /Row 3 -->
+
+      <!-- Row 4 -->
+      <div class="grid-row">
+        <div class="grid-cell-100 labeled">
+          <label>deadline</label>
+          <input #d (blur)="element.deadline=d.value" name="deadline" type="text" value="{{createElement ? '' : element.deadline}}" />
+        </div>
+      </div>
+      <!-- /Row 4 -->
 
       <!-- Buttons -->
       <div *ngIf="!createElement" class="grid-row">

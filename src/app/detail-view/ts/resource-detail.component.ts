@@ -18,7 +18,8 @@ export class ResourceDetailComponent extends ElementDetailComponent implements O
   skillsToAdd: number[] = [];
 
   ngOnInit(): void {
-    if (this.createElement) this.element = new Resource(null, null, null, null, null);
+    if (this.createElement) this.element = new Resource(null, null, null, null, []);
+    console.log("RESOURCE'S RELEASES", (this.element as Resource).releases);
     super.ngOnInit();
   }
 
@@ -42,12 +43,12 @@ export class ResourceDetailComponent extends ElementDetailComponent implements O
   }
 
   assignToRelease(relId: number) {
-    this.element.dataService.moveResourceToRelease(this.element as Resource, (this.element as Resource).release.id, relId);
+    //this.element.dataService.moveResourceToRelease(this.element as Resource, (this.element as Resource).release.id, relId);
   }
 
   update(): void {
     if (this.skillsToAdd.length > 0 || this.skillsToRemove.length > 0) {
-      let feat = this.element as Feature;
+      // ??? let feat = this.element as Feature;
       this.element.dataService.addSkillsToResource(this.element as Resource, this.skillsToAdd);
       this.element.dataService.removeSkillsFromResource(this.element as Resource, this.skillsToAdd);
     }
@@ -56,9 +57,22 @@ export class ResourceDetailComponent extends ElementDetailComponent implements O
 
   nonSelectedSkills(): Skill[] {
     let elem = this.element as Resource;
+
     let all = elem.project.skills;
     let skills = elem.skills;
 
     return all.filter(function(s) {return skills.indexOf(s) < 0;});
+  }
+
+  nonSelectedReleases(): Skill[] {
+    let elem = this.element as Resource;
+
+    let all = elem.project.releases;
+    let releases = elem.releases;
+
+    //console.log("Release of element", elem, "is", rel);
+
+    if (!releases) return all;
+    else return all.filter(function(r) {return releases.indexOf(r) < 0;});
   }
 }

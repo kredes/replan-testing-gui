@@ -9,6 +9,7 @@ import {Release} from "../../domain/release";
 })
 export class ReleaseDetailComponent extends ElementDetailComponent  implements OnInit {
   ngOnInit(): void {
-    if (this.createElement) this.element = new Release(null, null, null, null, null);
+    if (this.createElement) this.element = new Release(null, null, null, null, null, null);
+    super.ngOnInit();
   }
 }

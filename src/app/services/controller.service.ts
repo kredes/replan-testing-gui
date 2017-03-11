@@ -18,7 +18,7 @@ export class ControllerService {
   currentProjectId: number;
   //= 'http://localhost:3000/api/ui/v1/projects/1';
 
-  /* My little cache indexed by id */
+
   // TODO: Simplify to {ReplanElemType: [{id: element}]}
   private projects: Object = {};
   private resources: Object = {};
@@ -56,11 +56,11 @@ export class ControllerService {
       case ReplanElemType.RESOURCE:
         return this.deleteResource(element as Resource);
       case ReplanElemType.SKILL:
-        break;
+        return this.deleteSkill(element as Skill);
       case ReplanElemType.FEATURE:
         break;
       case ReplanElemType.RELEASE:
-        break;
+        return this.deleteRelease(element as Release);
     }
     return null;
   }
@@ -144,12 +144,63 @@ export class ControllerService {
 
   /* GETTERS */
   // TODO: Implement cache for all methods, not only Resources
+  getCachedProject(id: number): Project {
+    if (this.projects[id]) return this.projects[id];
+    else return null;
+  }
+  getCachedRelease(id: number): Release {
+    if (this.releases[id]) return this.releases[id];
+    else return null;
+  }
+  getCachedFeature(id: number): Feature {
+    if (this.features[id]) return this.features[id];
+    else return null;
+  }
+  getCachedSkill(id: number): Skill {
+    if (this.skills[id]) return this.skills[id];
+    else return null;
+  }
+  getCachedResource(id: number): Resource {
+    if (this.resources[id]) return this.resources[id];
+    else return null;
+  }
+
   getProject(id: number): Promise<Project> {
-    return this.http.get(this.apiUrl + "/projects/" + id)
+    let aux = this.getCachedProject(id);
+    if (aux) return Promise.resolve(aux);
+    else return this.http.get(this.apiUrl + "/projects/" + id)
       .toPromise()
       .then(response => Project.fromJSON(response.json()))
       .catch(this.handleError);
   };
+  getRelease(id: number): Promise<Release> {
+    let aux = this.getCachedRelease(id);
+    if (aux) return Promise.resolve(aux);
+    else {
+      throw "You shouldn't be using this right now";
+    }
+  }
+  getFeature(id: number): Promise<Feature> {
+    let aux = this.getCachedFeature(id);
+    if (aux) return Promise.resolve(aux);
+    else {
+      throw "You shouldn't be using this right now";
+    }
+  }
+  getSkill(id: number): Promise<Skill> {
+    let aux = this.getCachedSkill(id);
+    if (aux) return Promise.resolve(aux);
+    else {
+      throw "You shouldn't be using this right now";
+    }
+  }
+  getResource(id: number): Promise<Resource> {
+    let aux = this.getCachedResource(id);
+    if (aux) return Promise.resolve(aux);
+    else {
+      throw "You shouldn't be using this right now";
+    }
+  }
 
   getOriginalElement(copy: ReplanElement): Promise<ReplanElement> {
     let id = copy.id;
@@ -175,10 +226,6 @@ export class ControllerService {
   }
 
   getProjectFeatures(project: Project) {
-
-  }
-
-  getFeature(id: number) {
 
   }
 
@@ -298,11 +345,13 @@ export class ControllerService {
   }
 
 
+
   /* CREATIONS */
   createRelease(release: Release): Promise<any> {
     let body: Object = {
       'name': release.name,
       'description': release.description,
+      'starts_at': release.starts_at,
       'deadline': release.deadline
     };
     return this.http.post(this.basePath + '/releases', body)
@@ -342,6 +391,20 @@ export class ControllerService {
       })
       .catch(this.handleError);
   }
+/*
+  createFeature(feature: Feature): Promise<any> {
+    let body: Object = {
+      'name': skill.name,
+      'description': skill.description
+    };
+    return this.http.post(this.basePath + '/skills', body)
+      .toPromise()
+      .then(response => {
+        this.cacheElement(skill);
+        return response;
+      })
+      .catch(this.handleError);
+  }*/
 
 
   /* DELETES */
@@ -354,7 +417,6 @@ export class ControllerService {
       })
       .catch(this.handleError);
   }
-
   deleteSkill(skill: Skill): Promise<any> {
     return this.http.delete(this.basePath + '/skills/' + skill.id)
       .toPromise()
@@ -364,7 +426,6 @@ export class ControllerService {
       })
       .catch(this.handleError);
   }
-
   deleteRelease(release: Release): Promise<any> {
     return this.http.delete(this.basePath + '/releases/' + release.id)
       .toPromise()
@@ -524,6 +585,8 @@ export class ControllerService {
 
 
   /* MOVE X TO Y */
+  // TODO: 'MOVE X TO Y' doesn't have to remove it from the original, just make a copy
+
   moveResourceToProject(res: Resource, newProjId: number) {
     this.removeResourceFromProject(res);
     let aux = this.currentProjectId;

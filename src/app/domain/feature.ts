@@ -7,6 +7,7 @@ import {ReplanElemType} from "./replan-elem-type";
 import {Record} from "../services/record";
 import {RecordType} from "../services/record-type";
 import {Project} from "./project";
+import {Utils} from "../utils";
 
 export class Feature extends ReplanElement {
 
@@ -37,18 +38,24 @@ export class Feature extends ReplanElement {
 
   static fromJSON(j: any): Feature {
     if (!Config.suppressElementCreationMessages) Log.i('Creating Feature from:', j);
-    return new Feature(
-      j.id,
-      j.name,
-      j.description,
-      j.code,
-      j.effort,
-      j.deadline,
-      j.priority,
-      Skill.fromJSONArray(j['required_skills']),
-      null // If you try to create the dependencies from here it will crash as
-           // the server doesn't provide the full data for them
-    );
+
+    let aux = ReplanElement.staticDataService.getCachedFeature(j.id);
+    if (aux) return aux;
+    else {
+      let f = new Feature(
+        j.id,
+        j.name,
+        j.description,
+        j.code,
+        j.effort,
+        j.deadline,
+        j.priority,
+        Skill.fromJSONArray(j['required_skills']),
+        Feature.fromJSONArray(j['depends_on'])
+      );
+      ReplanElement.staticDataService.cacheElement(f);
+      return f;
+    }
   }
 
   static fromJSONArray(j: any): Feature[] {
@@ -64,16 +71,18 @@ export class Feature extends ReplanElement {
 
   clone(): ReplanElement {
     let aux = new Feature(
-      this.id,
+      this.id,  // TODO: Is this actually valid?
       this.name,
       this.description,
       this.code,
       this.effort,
       this.deadline,
       this.priority,
-      this.required_skills,
-      this.depends_on,  // TODO: Not a good idea at all to pass my own array of things on a clone()!
+      [],
+      []
     );
+    if (this.required_skills) this.required_skills.forEach(s => aux.required_skills.push(s));
+    if (this.depends_on) this.depends_on.forEach(d => aux.depends_on.push(d));
     aux.oldValues = JSON.parse(JSON.stringify(this.oldValues));
     return aux;
   }
