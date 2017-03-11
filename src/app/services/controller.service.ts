@@ -12,8 +12,8 @@ import {ReplanElemType} from "../domain/replan-elem-type";
 
 @Injectable()
 export class ControllerService {
-  //private apiUrl = 'http://localhost:3000/api/ui/v1';
-  private apiUrl = 'http://62.14.219.13:8280/replan';
+  private _apiUrl = 'http://localhost:3000/api/ui/v1';
+  //private apiUrl = 'http://62.14.219.13:8280/replan';
   private basePath: string;
   currentProjectId: number;
   //= 'http://localhost:3000/api/ui/v1/projects/1';
@@ -28,6 +28,14 @@ export class ControllerService {
 
   constructor(private http: Http) {
     this.setActiveProject(1);
+  }
+
+
+  set apiUrl(url: string) {
+    this._apiUrl = url;
+  }
+  get apiUrl(): string {
+    return this._apiUrl;
   }
 
   setActiveProject(projId: number) {
@@ -185,7 +193,6 @@ export class ControllerService {
       return this.http.get(path)
         .toPromise()
         .then(response => {
-          console.log("RESPONSE:", response.json());
           return Feature.fromJSONArray(response.json());
         })
         .catch(this.handleError);

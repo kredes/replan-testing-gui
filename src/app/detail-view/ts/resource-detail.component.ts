@@ -19,10 +19,6 @@ export class ResourceDetailComponent extends ElementDetailComponent implements O
 
   ngOnInit(): void {
     if (this.createElement) this.element = new Resource(null, null, null, null, null);
-    else {
-      console.log((this.element as Resource).project);
-    }
-
     super.ngOnInit();
   }
 

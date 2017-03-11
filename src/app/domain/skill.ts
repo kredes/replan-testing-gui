@@ -40,6 +40,10 @@ export class Skill extends ReplanElement {
     return this.cache[id];
   }
 
+  static clearCache(): void {
+    this.cache = [];
+  }
+
   static fromJSONArray(j: any): Skill[] {
     if (!Config.suppressElementCreationMessages) Log.i('Creating several Skills from:', j);
     let skills: Skill[] = [];

@@ -49,6 +49,7 @@ export class Project extends ReplanElement {
     this.addChange('hours_per_week_and_full_time_resource', this.hours_per_week_and_full_time_resource);
     this.addChange('resources', this.resources);
     this.addChange('resourceIds', this.resourceIds);
+
   }
 
   getSkills(): Skill[] {

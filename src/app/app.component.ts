@@ -10,6 +10,7 @@ import {element} from "protractor";
 import {Release} from "./domain/release";
 import {Resource} from "./domain/resource";
 import {Feature} from "./domain/feature";
+import {Skill} from "./domain/skill";
 
 @Component({
   selector: 'app-root',
@@ -47,6 +48,7 @@ export class AppComponent implements OnInit, OnElementChange {
   ngOnInit(): void {
     this.controllerService.getProject(1)
       .then(project => {
+        console.log(project);
         this.activeElement = project;
         this.validTabs = ["Resources", "Features", "Releases", "Skills"];
         this.onTabSelected("Resources");
@@ -79,23 +81,45 @@ export class AppComponent implements OnInit, OnElementChange {
     }
   }
 
+  waitForAttributeLoaded(attr: any): void {
+    if (!attr) {
+      console.log("Waiting attribute loading...");
+      setTimeout(this.waitForAttributeLoaded(attr), 100);
+    } else {
+      console.log("Attribute loaded:", attr);
+      return;
+    }
+  }
+
   onTabSelected(tab: string): void {
     // Update related items
     let elem = this.activeElement;
     switch (tab) {
       case 'Resources':
-        if (elem instanceof Project || elem instanceof Release) this.relatedElements = elem.resources;
+        if (elem instanceof Project || elem instanceof Release) {
+          this.waitForAttributeLoaded(elem.resources);
+          this.relatedElements = elem.resources;
+        }
         break;
       case 'Features':
-        if (elem instanceof Project) this.relatedElements = elem.features;
+        if (elem instanceof Project) {
+          this.waitForAttributeLoaded(elem.features);
+          this.relatedElements = elem.features;
+        }
         break;
       case 'Releases':
         this.controllerService.getReleasesOf(this.activeElement)
           .then(releases => this.relatedElements = releases);
         break;
       case 'Skills':
-        if (elem instanceof Project ||elem instanceof Resource) this.relatedElements = elem.skills;
-        else if (elem instanceof Feature) this.relatedElements = elem.required_skills;
+        if (elem instanceof Project ||elem instanceof Resource) {
+          this.waitForAttributeLoaded(elem.skills);
+          this.relatedElements = elem.skills;
+        }
+        else if (elem instanceof Feature) {
+          this.waitForAttributeLoaded(elem.required_skills);
+          this.relatedElements = elem.required_skills;
+        }
         break;
       case 'None':
       default:
@@ -115,7 +139,6 @@ export class AppComponent implements OnInit, OnElementChange {
 
   onElementCreated(element: ReplanElement): void {
     console.info("Called onElementCreated at app.component.ts", element);
-    // TODO: Change this hardcoded shit;
     this.relatedElements.push(element);
     console.log(this.relatedElements);
     this.createElement = false;
@@ -145,5 +168,14 @@ export class AppComponent implements OnInit, OnElementChange {
     let index = this.breadcrumbs.indexOf(elem);
     this.breadcrumbs.splice(index + 1, this.breadcrumbs.length - index + 1);
     this.activeElement = elem;
+  }
+
+  setApiUrl(newUrl: string): void {
+    this.controllerService.apiUrl = newUrl;
+    this.controllerService.setActiveProject(1);
+    Skill.clearCache();
+    this.breadcrumbs = [];
+    this.ngOnInit();
+    console.log((this.activeElement as Project).skills);
   }
 }

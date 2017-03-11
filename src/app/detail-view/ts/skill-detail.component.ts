@@ -11,5 +11,6 @@ import {Skill} from "../../domain/skill";
 export class SkillDetailComponent extends ElementDetailComponent implements OnInit {
   ngOnInit(): void {
     if (this.createElement) this.element = new Skill(null, null, null);
+    super.ngOnInit();
   }
 }

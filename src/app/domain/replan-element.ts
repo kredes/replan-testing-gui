@@ -9,6 +9,7 @@ export abstract class ReplanElement {
   private static _dataService: ControllerService;
   private static _changeRecordService: ChangeRecordService;
   onElementChange: OnElementChange;
+  loaded: Boolean;
 
   attributes: string[] = ['id', 'name', 'description'];
 
@@ -89,7 +90,6 @@ export abstract class ReplanElement {
     this.addChange('type', this._type);
     this._type = value;
   }
-
 
   abstract clone(): ReplanElement;
 
