@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Headers, Http } from '@angular/http';
+import {Headers, Http, URLSearchParams, RequestOptions} from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
 import {Project} from "../domain/project";
@@ -143,7 +143,14 @@ export class ControllerService {
 
 
   /* GETTERS */
-  // TODO: Implement cache for all methods, not only Resources
+  // TODO: cache
+  getAllProjects(): Promise<Project[]> {
+    return this.http.get(this.apiUrl + "/projects")
+      .toPromise()
+      .then(response => Project.fromJSONArray(response.json()))
+      .catch(this.handleError);
+  }
+
   getCachedProject(id: number): Project {
     if (this.projects[id]) return this.projects[id];
     else return null;
@@ -225,6 +232,7 @@ export class ControllerService {
     return Promise.resolve(element);
   }
 
+  // TODO: Implement cache for these methods
   getProjectFeatures(project: Project) {
 
   }
@@ -361,7 +369,6 @@ export class ControllerService {
       })
       .catch(this.handleError);
   }
-
   createResource(resource: Resource): Promise<any> {
     let body: Object = {
       'name': resource.name,
@@ -375,7 +382,6 @@ export class ControllerService {
       })
       .catch(this.handleError);
   }
-
   createSkill(skill: Skill): Promise<any> {
     let body: Object = {
       'name': skill.name,
@@ -388,7 +394,6 @@ export class ControllerService {
       })
       .catch(this.handleError);
   }
-
   createFeature(feature: Feature): Promise<any> {
     let body: Object = {
       'code': feature.code,
@@ -521,14 +526,18 @@ export class ControllerService {
 
   /* ADD X TO Y */
   addSkillsToFeature(feature: Feature, skillIds: number[]) {
-    this.http.post(this.basePath + '/features/' + feature.id + '/skills', JSON.stringify(skillIds))
+    let body = [];
+    skillIds.forEach(id => body.push({'skill_id': id}));
+    this.http.post(this.basePath + '/features/' + feature.id + '/skills', body)
       .toPromise()
       .then(response => response)
       .catch(this.handleError);
   }
 
   addSkillsToResource(res: Resource, skillIds: number[]) {
-    this.http.post(this.basePath + '/resources/' + res.id + '/skills', JSON.stringify(skillIds))
+    let body = [];
+    skillIds.forEach(id => body.push({'skill_id': id}));
+    this.http.post(this.basePath + '/resources/' + res.id + '/skills', body)
       .toPromise()
       .then(response => response)
       .catch(this.handleError);
@@ -547,10 +556,11 @@ export class ControllerService {
       .catch(this.handleError)
   }
 
-  addResourceToRelease(res: Resource, relId: number) {
-    let body = [res.id];
+  addResourcesToRelease(relId: number, resourceIds: number[]): Promise<any> {
+    let body = [];
+    resourceIds.forEach(id => body.push({'resource_id': id}));
     return this.http.post(
-      this.basePath + '/releases/' + relId + '/resources', JSON.stringify(body))
+      this.basePath + '/releases/' + relId + '/resources', body)
       .toPromise()
       .then(response => response)
       .catch(this.handleError)
@@ -571,12 +581,12 @@ export class ControllerService {
   }
 
   removeSkillsFromResource(res: Resource, skillIds: number[]) {
-    let config = {
-      params: {
-        'skillId': skillIds
-      }
-    };
-    this.http.post(this.basePath + '/resources/' + res.id + '/skills', config)
+    let params: URLSearchParams = new URLSearchParams();
+    params.set('skillId', skillIds.join());
+    let requestOptions = new RequestOptions();
+    requestOptions.search = params;
+
+    this.http.delete(this.basePath + '/resources/' + res.id + '/skills', requestOptions)
       .toPromise()
       .then(response => response)
       .catch(this.handleError);
@@ -590,12 +600,14 @@ export class ControllerService {
       .catch(this.handleError)
   }
 
-  removeResourceFromRelease(res: Resource, relId: number) {
-    let config = {
-      params: [res.id]
-    };
+  removeResourcesFromRelease(releaseId: number, resourceIds: number[]) {
+    let params: URLSearchParams = new URLSearchParams();
+    params.set('ResourceId', resourceIds.join());
+    let requestOptions = new RequestOptions();
+    requestOptions.search = params;
+
     return this.http.delete(
-      this.basePath + '/releases/' + relId + '/resources/' + res.id, config)
+      this.basePath + '/releases/' + releaseId + '/resources', requestOptions)
       .toPromise()
       .then(response => response)
       .catch(this.handleError)
@@ -606,17 +618,15 @@ export class ControllerService {
   /* MOVE X TO Y */
   // TODO: 'MOVE X TO Y' doesn't have to remove it from the original, just make a copy
 
-  moveResourceToProject(res: Resource, newProjId: number) {
-    this.removeResourceFromProject(res);
+  moveResourceToProject(res: Resource, projectId: number) {
     let aux = this.currentProjectId;
 
-    this.setActiveProject(newProjId);
+    this.setActiveProject(projectId);
     this.addResourceToProject(res);
     this.setActiveProject(aux);
   }
 
-  moveResourceToRelease(res: Resource, oldRelId: number, newRelId: number) {
-    this.removeResourceFromRelease(res, oldRelId);
-    this.addResourceToRelease(res, newRelId);
+  moveResourceToRelease(res: Resource, releaseId: number) {
+    this.addResourcesToRelease(releaseId, [res.id]);
   }
 }

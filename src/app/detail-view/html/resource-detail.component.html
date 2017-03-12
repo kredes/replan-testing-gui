@@ -36,13 +36,25 @@
       <!-- /Row 2 -->
 
       <!-- Row 3 -->
-      <div *ngIf="!createElement && this.element.project" class="grid-row">
+      <div *ngIf="!createElement" class="grid-row">
+        <div *ngIf="element.project" class="grid-cell-100 labeled">
+          <label>assigned to project: <b>{{element.project.name}} (id: {{element.project.id}})</b></label>
+        </div>
+      </div>
+      <!-- /Row 3 -->
+
+      <!-- Row 3 -->
+      <div *ngIf="!createElement" class="grid-row">
         <div class="grid-cell-100 labeled">
-          <label>assigned to projects</label>
-          <select (change)="assignToProject($event.target.value)">
-            <option value="1">Project 1</option>
-            <option value="2">Project 2</option>
-          </select>
+          <label>duplicate in projects</label>
+
+          <div class="checkbox-box">
+            <label *ngFor="let project of nonSelectedProjects()">
+              <input (change)="onReleaseStateChange($event)"
+                     checked type="checkbox" name="project-{{project.id}}" value="{{project.id}}"/>
+              {{project.name}}
+            </label>
+          </div>
         </div>
       </div>
       <!-- /Row 3 -->
@@ -63,7 +75,8 @@
             <div *ngIf="element.project.releases">
               <span *ngFor="let release of this.nonSelectedReleases()" style="display: inline;">
                 <label>
-                  <input type="checkbox" name="{{release.id}}" value="skill-{{release.id}}"/>
+                  <input (change)="onReleaseStateChange($event)"
+                    type="checkbox" name="release-{{release.id}}" value="{{release.id}}"/>
                   {{release.name}}
                 </label>
               </span>
@@ -90,7 +103,8 @@
             <div *ngIf="element.project.skills">
               <span *ngFor="let skill of this.nonSelectedSkills()" style="display: inline;">
                 <label>
-                  <input type="checkbox" name="{{skill.id}}" value="skill-{{skill.id}}"/>
+                  <input (change)="onSkillStateChange($event)"
+                    type="checkbox" name="{{skill.id}}" value="{{skill.id}}"/>
                   {{skill.name}}
                 </label>
               </span>

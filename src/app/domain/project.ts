@@ -8,6 +8,7 @@ import {Record} from "../services/record";
 import {RecordType} from "../services/record-type";
 import {Skill} from "./skill";
 import {Release} from "./release";
+import {Utils} from "../utils";
 
 export class Project extends ReplanElement {
 
@@ -27,6 +28,7 @@ export class Project extends ReplanElement {
     public resources: Resource[]
   ) {
     super(id, name, description, ReplanElemType.PROJECT);
+
     this.resources.forEach(resource => {
       this.resourceIds.push(resource.id);
       resource.project = this;
@@ -34,6 +36,7 @@ export class Project extends ReplanElement {
 
     this.dataService.getSkillsOf(this)
       .then(skills =>  this.skills = skills);
+
 
     this.dataService.getFeaturesOf(this)
       .then(features => {
@@ -43,6 +46,11 @@ export class Project extends ReplanElement {
 
     this.dataService.getReleasesOf(this)
       .then(releases => this.releases = releases);
+
+
+    //Utils.waitUntilExists(this.skills);
+    //Utils.waitUntilExists(this.features);
+    //Utils.waitUntilExists(this.releases);
 
     this.addChange('effort_unit', this.effort_unit);
     this.addChange('hours_per_effort_unit', this.hours_per_effort_unit);
@@ -55,6 +63,7 @@ export class Project extends ReplanElement {
     let aux: Skill[];
     this.dataService.getSkillsOf(this)
       .then(skills => aux = skills);
+    Utils.waitUntilExists(aux);
     console.log(aux);
     return aux;
   }

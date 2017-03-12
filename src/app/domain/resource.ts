@@ -17,8 +17,6 @@ export class Resource extends ReplanElement implements OnChanges {
   project: Project;
   releases: Release[];
 
-  cache: Resource[];
-
   constructor(
     id: number,
     name: string,
