@@ -46,7 +46,7 @@ export class Skill extends ReplanElement {
   static fromJSONArray(j: any): Skill[] {
     if (!Config.suppressElementCreationMessages) Log.i('Creating several Skills from:', j);
     let skills: Skill[] = [];
-    j.forEach(skill => skills.push(this.fromJSON(skill, true)));
+    j.forEach(skill => skills.push(Skill.fromJSON(skill, true)));
     return skills;
   }
 
@@ -67,10 +67,9 @@ export class Skill extends ReplanElement {
       .then(response => {
         let res = Skill.fromJSON(response.json(), false);
         this.attributes.forEach(attr => this[attr] = res[attr]);
+
         this.dataService.cacheElement(this);
-
         if (addRecord) this.changeRecordService.addRecord(new Record(this, RecordType.CREATION));
-
         this.onElementChange.onElementCreated(this);
       });
   }

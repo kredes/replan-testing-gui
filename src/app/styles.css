@@ -181,6 +181,7 @@ div[class$="-button"] button:hover {
 
 .project .title {
   background-color: #3F51B5;
+  width: 100%;
   color: white;
   height: 50px;
   line-height: 50px;
@@ -189,6 +190,7 @@ div[class$="-button"] button:hover {
 }
 
 .project .details {
+  width: 100%;
   display: block;
   float: left;
   border-left: 2px solid #3F51B5;

@@ -52,13 +52,13 @@ export class ControllerService {
   removeElement(element: ReplanElement): Promise<Object> {
     switch (element.type) {
       case ReplanElemType.PROJECT:
-        break;
+        return this.deleteProject(element as Project);
       case ReplanElemType.RESOURCE:
         return this.deleteResource(element as Resource);
       case ReplanElemType.SKILL:
         return this.deleteSkill(element as Skill);
       case ReplanElemType.FEATURE:
-        break;
+        return this.deleteFeature(element as Feature);
       case ReplanElemType.RELEASE:
         return this.deleteRelease(element as Release);
     }
@@ -70,7 +70,7 @@ export class ControllerService {
       case ReplanElemType.PROJECT:
         break;
       case ReplanElemType.RESOURCE:
-        return this.createResource(element as Resource, 1);
+        return this.createResource(element as Resource);
       case ReplanElemType.SKILL:
         break;
       case ReplanElemType.FEATURE:
@@ -357,13 +357,12 @@ export class ControllerService {
     return this.http.post(this.basePath + '/releases', body)
       .toPromise()
       .then(response => {
-        this.cacheElement(release);
         return response;
       })
       .catch(this.handleError);
   }
 
-  createResource(resource: Resource, projectId: number): Promise<any> {
+  createResource(resource: Resource): Promise<any> {
     let body: Object = {
       'name': resource.name,
       'description': resource.description,
@@ -372,7 +371,6 @@ export class ControllerService {
     return this.http.post(this.basePath + '/resources', body)
       .toPromise()
       .then(response => {
-        this.cacheElement(resource);
         return response;
       })
       .catch(this.handleError);
@@ -386,25 +384,27 @@ export class ControllerService {
     return this.http.post(this.basePath + '/skills', body)
       .toPromise()
       .then(response => {
-        this.cacheElement(skill);
         return response;
       })
       .catch(this.handleError);
   }
-/*
+
   createFeature(feature: Feature): Promise<any> {
     let body: Object = {
-      'name': skill.name,
-      'description': skill.description
+      'code': feature.code,
+      'name': feature.name,
+      'description': feature.description,
+      'effort': feature.effort,
+      'deadline': feature.deadline,
+      'priority': feature.priority
     };
-    return this.http.post(this.basePath + '/skills', body)
+    return this.http.post(this.basePath + '/features/create_one', body)
       .toPromise()
       .then(response => {
-        this.cacheElement(skill);
         return response;
       })
       .catch(this.handleError);
-  }*/
+  }
 
 
   /* DELETES */
@@ -435,9 +435,28 @@ export class ControllerService {
       })
       .catch(this.handleError);
   }
+  deleteFeature(feature: Feature): Promise<any> {
+    return this.http.delete(this.basePath + '/features/' + feature.id)
+      .toPromise()
+      .then(response => {
+        this.uncacheElement(feature);
+        return response;
+      })
+      .catch(this.handleError);
+  }
+  deleteProject(project: Project): Promise<any> {
+    return this.http.delete(this.apiUrl + '/projects' + project.id)
+      .toPromise()
+      .then(response => {
+        this.uncacheElement(project);
+        return response;
+      })
+      .catch(this.handleError);
+  }
 
 
   /* UPDATES */
+  // TODO: This seems to always cause a 500 error, but the server actually updates the Feature. ???
   updateFeature(feature: Feature): Promise<Object> {
     let body: Object = {
       'name': feature.name,

@@ -12,4 +12,6 @@ export class ReleaseDetailComponent extends ElementDetailComponent  implements O
     if (this.createElement) this.element = new Release(null, null, null, null, null, null);
     super.ngOnInit();
   }
+
+  // TODO: Fails on undoing, but it does undo. Seen on undoing a deletion.
 }

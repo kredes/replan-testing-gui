@@ -88,8 +88,16 @@ export class Feature extends ReplanElement {
   }
 
   /* GATEWAY */
-  save(): void {
-    // No API call to create a Feature
+  save(addRecord: Boolean): void {
+    this.dataService.createFeature(this)
+      .then(response => {
+        let feat = Feature.fromJSON(response.json());
+        this.attributes.forEach(attr => this[attr] = feat[attr]);
+
+        this.dataService.cacheElement(this);
+        if (addRecord) this.changeRecordService.addRecord(new Record(this, RecordType.CREATION));
+        this.onElementChange.onElementCreated(this);
+      });
   }
 
   hasSkill(skill: Skill): Boolean {

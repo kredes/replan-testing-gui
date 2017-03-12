@@ -8,7 +8,7 @@ import {RecordType} from "../services/record-type";
 
 export class Release extends ReplanElement {
 
-  attributes: string[] = ['id', 'name', 'description', 'deadline', 'resourceIds'];
+  attributes: string[] = ['id', 'name', 'description', 'starts_at', 'deadline', 'resourceIds'];
   resourceIds: number[] = [];
 
   constructor(
@@ -77,10 +77,9 @@ export class Release extends ReplanElement {
       .then(response => {
         let res = Release.fromJSON(response.json(), false);
         this.attributes.forEach(attr => this[attr] = res[attr]);
+
         this.dataService.cacheElement(this);
-
         if (addRecord) this.changeRecordService.addRecord(new Record(this, RecordType.CREATION));
-
         this.onElementChange.onElementCreated(this);
       });
   }

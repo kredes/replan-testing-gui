@@ -52,22 +52,22 @@
         <div class="grid-cell-100 labeled">
           <label>assigned to releases</label>
           <div class="checkbox-box">
-            <span *ngIf="element.releases && element.releases.length > 0">
+            <div *ngIf="element.releases && element.releases.length > 0">
               <label *ngFor="let release of element.releases">
                 <input (change)="onReleaseStateChange($event)"
                        checked type="checkbox" name="skill-{{release.id}}" value="{{release.id}}"/>
                 {{release.name}}
               </label>
-            </span>
+            </div>
 
-            <span *ngIf="element.project.releases">
+            <div *ngIf="element.project.releases">
               <span *ngFor="let release of this.nonSelectedReleases()" style="display: inline;">
                 <label>
                   <input type="checkbox" name="{{release.id}}" value="skill-{{release.id}}"/>
                   {{release.name}}
                 </label>
               </span>
-            </span>
+            </div>
           </div>
         </div>
       </div>
@@ -79,22 +79,22 @@
           <label>skills</label>
           <!-- TODO: Make this expandable so it doesn't take up a shitton of space-->
           <div class="checkbox-box">
-            <span *ngIf="element.skills && element.skills.length > 0">
+            <div *ngIf="element.skills && element.skills.length > 0">
               <label *ngFor="let skill of element.skills">
                 <input (change)="onSkillStateChange($event)"
                   checked type="checkbox" name="skill-{{skill.id}}" value="{{skill.id}}"/>
                 {{skill.name}}
               </label>
-            </span>
+            </div>
 
-            <span *ngIf="element.project.skills">
+            <div *ngIf="element.project.skills">
               <span *ngFor="let skill of this.nonSelectedSkills()" style="display: inline;">
                 <label>
                   <input type="checkbox" name="{{skill.id}}" value="skill-{{skill.id}}"/>
                   {{skill.name}}
                 </label>
               </span>
-            </span>
+            </div>
           </div>
         </div>
       </div>

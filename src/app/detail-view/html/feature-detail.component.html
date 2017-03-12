@@ -15,7 +15,7 @@
 
         <div class="grid-cell-20 labeled">
           <label>code</label>
-          <input disabled type="text" value="{{element.code}}" />
+          <input #f (blur)="element.code=f.value" name="code" type="text" value="{{createElement ? '' : element.code}}" />
         </div>
 
         <div class="grid-cell-60 labeled">
@@ -54,12 +54,11 @@
       <!-- /Row 3 -->
 
       <!-- Row 4 -->
-      <div *ngIf="element.required_skills && element.required_skills.length > 0" class="grid-row">
+      <div *ngIf="element.project" class="grid-row">
         <div class="grid-cell-100 labeled">
           <label>required skills</label>
           <!-- TODO: Make this expandable so it doesn't take up a shitton of space-->
           <div class="checkbox-box">
-
             <span *ngIf="element.required_skills && element.required_skills.length > 0">
               <label *ngFor="let skill of element.required_skills">
                 <input (change)="onSkillStateChange($event)"
@@ -68,7 +67,7 @@
               </label>
             </span>
 
-            <span *ngIf="this.element.project">
+            <span *ngIf="element.project">
               <span *ngFor="let skill of this.nonSelectedSkills()" style="display: inline;">
                 <label>
                   <input (change)="onSkillStateChange($event)"
@@ -84,16 +83,28 @@
       <!-- /Row 4 -->
 
       <!-- Row 5 -->
-      <div *ngIf="element.depends_on && element.depends_on.length > 0" class="grid-row">
+      <div *ngIf="element.project" class="grid-row">
         <div class="grid-cell-100 labeled">
           <label>depends on</label>
           <!-- TODO: Make this expandable so it doesn't take up a shitton of space-->
           <div class="checkbox-box">
-            <label *ngFor="let feature of element.depends_on">
-              <input (change)="onDependencyStateChange($event)"
-                checked type="checkbox" name="feature-{{feature.id}}" value="{{feature.id}}"/>
-              {{feature.name}}
-            </label>
+            <span *ngIf="element.depends_on">
+              <label *ngFor="let feature of element.depends_on">
+                <input (change)="onDependencyStateChange($event)"
+                  checked type="checkbox" name="feature-{{feature.id}}" value="{{feature.id}}"/>
+                {{feature.name}}
+              </label>
+            </span>
+
+            <span *ngIf="element.project.features">
+              <span *ngFor="let feature of nonSelectedDependencies()" style="display: inline;">
+                <label>
+                  <input (change)="onDependencyStateChange($event)"
+                         type="checkbox" name="feature-{{feature.id}}" value="{{feature.id}}"/>
+                  {{feature.name}}
+                </label>
+              </span>
+            </span>
           </div>
         </div>
       </div>

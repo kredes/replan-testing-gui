@@ -113,7 +113,7 @@ export abstract class ReplanElement {
   }
 
   // TODO something like Skills.fromIds(ids[]). Also something like Skills.toIds(Skill[]). Somewhere.
-
+  // TODO: Also, probably remove the Undo functionality and keep only the records. Too much of a trouble for very little benefit.
   undo(record: Record): void {
     let values = record.oldValues;
 
@@ -122,16 +122,17 @@ export abstract class ReplanElement {
       .then(element => {
         switch (record.type) {
           case RecordType.UPDATE:
-            console.log("Values will be restored to:", values);
+            // TODO: What if I have to undo "checkboxes"?
+            console.log("Undo: Values will be restored to:", values);
             this.attributes.forEach(attr => element[attr] = values[attr]);
             element.update(false);
             break;
           case RecordType.DELETION:
-            console.info("An element will be created with the following values:", values);
+            console.info("Undo: An element will be created with the following values:", values);
             this.save(false);
             break;
           case RecordType.CREATION:
-            console.info("The resource with id", this.id, "will be deleted.");
+            console.info("Undo: The resource with id", this.id, "will be deleted.");
             this.remove(false);
         }
 

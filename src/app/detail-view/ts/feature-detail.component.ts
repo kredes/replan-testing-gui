@@ -15,8 +15,8 @@ export class FeatureDetailComponent extends ElementDetailComponent implements On
   skillsToAdd: number[] = [];
 
   ngOnInit(): void {
-    if (this.createElement) this.element = new Feature(null, null, null, null, null, null, null, null, null);
-    else {
+    if (this.createElement) this.element = new Feature(null, null, null, null, null, null, null, [], []);
+    else if ((this.element as Feature).required_skills) {
       (this.element as Feature).required_skills.forEach(s => this.oldSkills.push(s.id))
     }
     super.ngOnInit();
@@ -57,6 +57,22 @@ export class FeatureDetailComponent extends ElementDetailComponent implements On
     let all = elem.project.skills;
     let skills = elem.required_skills;
 
+    if (!skills) return all;
+
     return all.filter(function(s) {return skills.indexOf(s) < 0;});
+  }
+
+  nonSelectedDependencies(): Feature[] {
+    let elem = this.element as Feature;
+    let all = elem.project.features;
+    let depends = elem.depends_on;
+
+    if (!depends) return all;
+
+    let auxId = this.element.id;
+
+    return all.filter(function(feat) {
+      return (depends.indexOf(feat) < 0) && (feat.id != auxId);
+    });
   }
 }
