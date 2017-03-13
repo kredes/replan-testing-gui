@@ -113,23 +113,19 @@ export class AppComponent implements OnInit, OnElementChange {
           this.relatedElements = elem.required_skills;
         }
         break;
-      // TODO: This one doesn't work for some unknown reason
       case 'Dependencies':
         if (elem instanceof Feature) {
           console.log("Gonna show dependencies of the feature", elem);
           Utils.waitUntilExists(elem.depends_on);
           this.relatedElements = elem.depends_on;
         }
+        break;
       case 'None':
       default:
         this.relatedElements = [];
         break;
     }
     this.selectedTab = tab;
-
-    console.debug("Selected tab:", this.selectedTab);
-    console.debug("Valid tabs:", this.validTabs);
-
   }
 
   newElement(): void {

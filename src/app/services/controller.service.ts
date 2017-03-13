@@ -19,7 +19,6 @@ export class ControllerService {
   //= 'http://localhost:3000/api/ui/v1/projects/1';
 
 
-  // TODO: Simplify to {ReplanElemType: [{id: element}]}
   private projects: Object = {};
   private resources: Object = {};
   private features: Object = {};
@@ -42,10 +41,6 @@ export class ControllerService {
     this.currentProjectId = projId;
     this.basePath = this.apiUrl + '/projects/' + projId;
   }
-
-  /*
-    TODO TODO TODO: Generalize everything for more than one Project
-  */
 
 
   /* GENERIC METHODS */
@@ -143,11 +138,25 @@ export class ControllerService {
 
 
   /* GETTERS */
-  // TODO: cache
   getAllProjects(): Promise<Project[]> {
     return this.http.get(this.apiUrl + "/projects")
       .toPromise()
-      .then(response => Project.fromJSONArray(response.json()))
+      .then(response => {
+        let projects: Project[] = [];
+
+        response.json().forEach(jsonFeat => {
+          if (jsonFeat.id in this.projects) {
+            //console.log("Project: cache hit");
+            projects.push(this.features[jsonFeat.id]);
+          }
+          else {
+            //console.log("Project: cache miss");
+            projects.push(Project.fromJSON(jsonFeat));
+          }
+        });
+        return projects;
+        //return Project.fromJSONArray(response.json();
+      })
       .catch(this.handleError);
   }
 
@@ -209,6 +218,7 @@ export class ControllerService {
     }
   }
 
+
   getOriginalElement(copy: ReplanElement): Promise<ReplanElement> {
     let id = copy.id;
     let element: ReplanElement;
@@ -232,11 +242,6 @@ export class ControllerService {
     return Promise.resolve(element);
   }
 
-  // TODO: Implement cache for these methods
-  getProjectFeatures(project: Project) {
-
-  }
-
   getFeaturesOf(element: any): Promise<Feature[]> {
     let path: string = null;
 
@@ -248,13 +253,26 @@ export class ControllerService {
       return this.http.get(path)
         .toPromise()
         .then(response => {
-          return Feature.fromJSONArray(response.json());
+          let features: Feature[] = [];
+
+          response.json().forEach(jsonFeat => {
+            if (jsonFeat.id in this.features) {
+              //console.log("Feature: cache hit");
+              features.push(this.features[jsonFeat.id]);
+            }
+            else {
+              //console.log("Feature: cache miss");
+              features.push(Feature.fromJSON(jsonFeat));
+            }
+          });
+          return features;
+          //return Feature.fromJSONArray(response.json();
         })
         .catch(this.handleError);
     } else {
       console.error("The element supplied cannnot have resources.");
+      return null;
     }
-    return null;
   }
 
   getResourcesOf(element: any): Promise<Resource[]> {
@@ -262,94 +280,101 @@ export class ControllerService {
     let path: string = null;
 
     if (element instanceof Project) path = this.basePath + '/resources';
-    else if (element instanceof Release) return Promise.resolve(element.resources);
+    else if (element instanceof Release) {
+      if (element.resources) return Promise.resolve(element.resources);
+      else path = this.basePath + 'releases' + element.id + '/resources' /*return Promise.resolve(element.resources)*/;
+    }
 
     if (path) {
       return this.http.get(path)
         .toPromise()
-        .then(response => Resource.fromJSONArray(response.json()))
+        .then(response => {
+          let resources: Resource[] = [];
+
+          response.json().forEach(jsonFeat => {
+            if (jsonFeat.id in this.resources) {
+              //console.log("Resource: cache hit");
+              resources.push(this.resources[jsonFeat.id]);
+            }
+            else {
+              //console.log("Resource: cache miss");
+              resources.push(Resource.fromJSON(jsonFeat, false));
+            }
+          });
+          return resources;
+          //return Resource.fromJSONArray(response.json();
+        })
         .catch(this.handleError);
     } else {
       console.error("The element supplied cannnot have resources associated.");
+      return null;
     }
-    return null;
-
-    /*
-    if (element instanceof Project || element instanceof Release) {
-      // Cache is a very bad idea
-      let resourceIds = element.resourceIds;
-
-      // Get as many cached resources as possible.
-      // Ideally, I should have all them cached at this point. But who knows.
-      let resources: Resource[] = [];
-      let found: Boolean[] = Array(resourceIds.length);
-      if (Object.keys(this.resources).length > 0) {
-        resourceIds.forEach((id, index) => {
-          if (id in this.resources) {
-            resources.push(this.resources[id]);
-            found[index] = true;
-          }
-        });
-        console.debug("Found", resources.length, "out of", element.resourceIds.length, "resources in cache.");
-      }
-
-
-      // Get the remaining resources (if any) from the server
-      if (resourceIds.length > resources.length) {
-        console.debug("Fetching from server.");
-        return this.http.get(this.basePath + '/resources')
-          .toPromise()
-          .then(response => {
-            let serverResources = Resource.fromJSONArray(response.json());
-            serverResources.forEach(resource => {
-              let index = resourceIds.indexOf(resource.id);
-              if (index > -1 && found[index] != true) {
-                resources.push(resource);
-                resourceIds.splice(index, 1);
-              }
-            });
-            if (resourceIds.length > 0) throw "Some resources were not fetched. This should never ever happen.";
-            return resources;
-          })
-          .catch(this.handleError);
-      } else {
-        return Promise.resolve(resources);
-      }
-    } else {
-      console.error("The element supplied cannnot have resources associated.");
-    }
-    return null;
-    */
   }
 
   getSkillsOf(element: any): Promise<Skill[]> {
     let path: string = null;
 
     if (element instanceof Project) path = this.basePath + '/skills';
-    else if (element instanceof Feature) return Promise.resolve(element.required_skills);
-    else if (element instanceof Resource) return Promise.resolve(element.skills);
+    else if (element instanceof Feature) {
+      if (element.required_skills) return Promise.resolve(element.required_skills);
+      else path = this.basePath + 'features' + element.id + '/skills'
+    }
+    else if (element instanceof Resource) {
+      if (element.skills) return Promise.resolve(element.skills);
+      else path = this.basePath + 'resources' + element.id + '/skills';
+    }
 
     if (path) {
       return this.http.get(path)
         .toPromise()
-        .then(response => Skill.fromJSONArray(response.json()))
+        .then(response => {
+          let skills: Skill[] = [];
+
+          response.json().forEach(jsonFeat => {
+            if (jsonFeat.id in this.skills) {
+              //console.log("Skill: cache hit");
+              skills.push(this.skills[jsonFeat.id]);
+            }
+            else {
+              //console.log("Skill: cache miss");
+              skills.push(Skill.fromJSON(jsonFeat, false));
+            }
+          });
+          return skills;
+          //return Skill.fromJSONArray(response.json();
+        })
         .catch(this.handleError);
     } else {
       console.error("The element supplied cannnot have skills associated.");
+      return null;
     }
-    return null;
   }
 
   getReleasesOf(element: any): Promise<Release[]> {
     if (element instanceof Project) {
       return this.http.get(this.basePath + '/releases')
         .toPromise()
-        .then(response => Release.fromJSONArray(response.json()))
+        .then(response => {
+          let releases: Release[] = [];
+
+          response.json().forEach(jsonFeat => {
+            if (jsonFeat.id in this.releases) {
+              //console.log("Release: cache hit");
+              releases.push(this.releases[jsonFeat.id]);
+            }
+            else {
+              //console.log("Release: cache miss");
+              releases.push(Release.fromJSON(jsonFeat, false));
+            }
+          });
+          return releases;
+          //return Skill.fromJSONArray(response.json();
+        })
         .catch(this.handleError);
     } else {
       console.error("The element supplied cannnot have releases associated.");
+      return null;
     }
-    return null;
   }
 
 
@@ -525,36 +550,47 @@ export class ControllerService {
 
 
   /* ADD X TO Y */
-  addSkillsToFeature(feature: Feature, skillIds: number[]) {
+  addSkillsToFeature(feature: Feature, skillIds: number[]): Promise<any> {
     let body = [];
     skillIds.forEach(id => body.push({'skill_id': id}));
-    this.http.post(this.basePath + '/features/' + feature.id + '/skills', body)
+    return this.http.post(this.basePath + '/features/' + feature.id + '/skills', body)
       .toPromise()
       .then(response => response)
       .catch(this.handleError);
   }
 
-  addSkillsToResource(res: Resource, skillIds: number[]) {
+  addSkillsToResource(res: Resource, skillIds: number[]): Promise<any> {
     let body = [];
     skillIds.forEach(id => body.push({'skill_id': id}));
-    this.http.post(this.basePath + '/resources/' + res.id + '/skills', body)
+    return this.http.post(this.basePath + '/resources/' + res.id + '/skills', body)
       .toPromise()
       .then(response => response)
       .catch(this.handleError);
   }
 
-  addResourceToProject(res: Resource) {
+  addDependencyToFeature(feat: Feature, depIds: number[]): Promise<any> {
+    let body = [];
+    depIds.forEach(id => body.push({'feature_id': id}));
+    return this.http.post(this.basePath + '/features/' + feat.id + '/dependencies', body)
+      .toPromise()
+      .then(response => response)
+      .catch(this.handleError);
+  }
+
+  // TODO: Isn't this the same as createResource? Add the resource to the actual Project instance?
+  /*  And most likely done bad. Removing it doesn't seem to break anything.
+  addResourceToProject(res: Resource): Promise<any> {
     let body = {
       'name': res.name,
       'description': res.description,
       'availability': res.availability
-    }
+    };
     return this.http.post(
       this.basePath + '/resources/' + res.id, body)
       .toPromise()
       .then(response => response)
       .catch(this.handleError)
-  }
+  }*/
 
   addResourcesToRelease(relId: number, resourceIds: number[]): Promise<any> {
     let body = [];
@@ -566,33 +602,56 @@ export class ControllerService {
       .catch(this.handleError)
   }
 
+  addFeaturesToRelease(rel: Release, featureIds: number[]): Promise<any> {
+    let body = [];
+    featureIds.forEach(id => body.push({'feature_id': id}));
+    return this.http.post(
+      this.basePath + '/releases/' + rel.id + '/features', body)
+      .toPromise()
+      .then(response => response)
+      .catch(this.handleError)
+  }
+
 
   /* REMOVE X FROM Y */
-  removeSkillsFromFeature(feature: Feature, skillIds: number[]) {
-    let config = {
-      params: {
-        'skillId': skillIds
-      }
-    };
-    this.http.post(this.basePath + '/features/' + feature.id + '/skills', config)
+  // TODO: Does it always cause a 500 error?
+  removeSkillsFromFeature(feature: Feature, skillIds: number[]): Promise<any> {
+    let params: URLSearchParams = new URLSearchParams();
+    params.set('skill_id', skillIds.join());
+    let requestOptions = new RequestOptions();
+    requestOptions.search = params;
+
+    return this.http.delete(this.basePath + '/features/' + feature.id + '/skills', requestOptions)
       .toPromise()
       .then(response => response)
       .catch(this.handleError);
   }
 
-  removeSkillsFromResource(res: Resource, skillIds: number[]) {
+  removeSkillsFromResource(res: Resource, skillIds: number[]): Promise<any> {
     let params: URLSearchParams = new URLSearchParams();
     params.set('skillId', skillIds.join());
     let requestOptions = new RequestOptions();
     requestOptions.search = params;
 
-    this.http.delete(this.basePath + '/resources/' + res.id + '/skills', requestOptions)
+    return this.http.delete(this.basePath + '/resources/' + res.id + '/skills', requestOptions)
       .toPromise()
       .then(response => response)
       .catch(this.handleError);
   }
 
-  removeResourceFromProject(res: Resource) {
+  removeDependencyFromFeature(feature: Feature, depIds: number[]): Promise<any> {
+    let params: URLSearchParams = new URLSearchParams();
+    params.set('feature_id', depIds.join());
+    let requestOptions = new RequestOptions();
+    requestOptions.search = params;
+
+    return this.http.delete(this.basePath + '/features/' + feature.id + '/dependencies', requestOptions)
+      .toPromise()
+      .then(response => response)
+      .catch(this.handleError);
+  }
+
+  removeResourceFromProject(res: Resource): Promise<any> {
     return this.http.delete(
       this.basePath + '/resources/' + res.id)
       .toPromise()
@@ -600,7 +659,7 @@ export class ControllerService {
       .catch(this.handleError)
   }
 
-  removeResourcesFromRelease(releaseId: number, resourceIds: number[]) {
+  removeResourcesFromRelease(releaseId: number, resourceIds: number[]): Promise<any> {
     let params: URLSearchParams = new URLSearchParams();
     params.set('ResourceId', resourceIds.join());
     let requestOptions = new RequestOptions();
@@ -613,16 +672,27 @@ export class ControllerService {
       .catch(this.handleError)
   }
 
+  removeFeaturesFromRelease(rel: Release, featureIds: number[]): Promise<any> {
+    let params: URLSearchParams = new URLSearchParams();
+    params.set('featureId', featureIds.join());
+    let requestOptions = new RequestOptions();
+    requestOptions.search = params;
+
+    return this.http.delete(
+      this.basePath + '/releases/' + rel.id + '/features', requestOptions)
+      .toPromise()
+      .then(response => response)
+      .catch(this.handleError)
+  }
+
 
 
   /* MOVE X TO Y */
-  // TODO: 'MOVE X TO Y' doesn't have to remove it from the original, just make a copy
-
   moveResourceToProject(res: Resource, projectId: number) {
     let aux = this.currentProjectId;
 
     this.setActiveProject(projectId);
-    this.addResourceToProject(res);
+    this.createResource(res);
     this.setActiveProject(aux);
   }
 

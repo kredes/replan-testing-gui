@@ -29,24 +29,28 @@ export class Project extends ReplanElement {
   ) {
     super(id, name, description, ReplanElemType.PROJECT);
 
-    this.resources.forEach(resource => {
-      this.resourceIds.push(resource.id);
-      resource.project = this;
-    });
-
     this.dataService.getSkillsOf(this)
-      .then(skills =>  this.skills = skills);
+      .then(skills => {
+        this.skills = skills
+      });
 
 
     this.dataService.getFeaturesOf(this)
       .then(features => {
         this.features = features;
-        features.forEach(feature => feature.project = this);
+        this.features.forEach(feature => feature.project = this);
       });
 
     this.dataService.getReleasesOf(this)
-      .then(releases => this.releases = releases);
+      .then(releases => {
+        this.releases = releases;
+        this.releases.forEach(r => r.project = this);
+      });
 
+    this.resources.forEach(resource => {
+      this.resourceIds.push(resource.id);
+      resource.project = this;
+    });
 
     //Utils.waitUntilExists(this.skills);
     //Utils.waitUntilExists(this.features);

@@ -5,11 +5,15 @@ import {ReplanElement} from "./replan-element";
 import {ReplanElemType} from "./replan-elem-type";
 import {Record} from "../services/record";
 import {RecordType} from "../services/record-type";
+import {Feature} from "./feature";
+import {Project} from "./project";
 
 export class Release extends ReplanElement {
 
   attributes: string[] = ['id', 'name', 'description', 'starts_at', 'deadline', 'resourceIds'];
   resourceIds: number[] = [];
+  features: Feature[];
+  project: Project;
 
   constructor(
     id: number,
@@ -20,6 +24,10 @@ export class Release extends ReplanElement {
     public resources: Resource[]
   ) {
     super(id, name, description, ReplanElemType.RELEASE);
+
+    this.dataService.getFeaturesOf(this)
+      .then(features => this.features = features);
+
     if (this.resources) this.resources.forEach(resource => {
       this.resourceIds.push(resource.id);
       resource.addRelease(this);
@@ -82,5 +90,15 @@ export class Release extends ReplanElement {
         if (addRecord) this.changeRecordService.addRecord(new Record(this, RecordType.CREATION));
         this.onElementChange.onElementCreated(this);
       });
+  }
+
+  addFeature(f: Feature): void {
+    if (!this.features) this.features = [];
+    this.features.push(f);
+  }
+
+  removeFeature(f: Feature): void {
+    if (!this.features) return;
+    this.features.splice(this.features.indexOf(f), 1);
   }
 }

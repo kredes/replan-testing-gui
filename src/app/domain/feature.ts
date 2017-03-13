@@ -8,6 +8,7 @@ import {Record} from "../services/record";
 import {RecordType} from "../services/record-type";
 import {Project} from "./project";
 import {Utils} from "../utils";
+import {Release} from "./release";
 
 export class Feature extends ReplanElement {
 
@@ -29,6 +30,7 @@ export class Feature extends ReplanElement {
     public depends_on: Feature[]
   ) {
     super(id, name, description, ReplanElemType.FEATURE);
+
     if (this.required_skills) this.required_skills.forEach(skill => this.requiredSkillsIds.push(skill.id));
     if (this.depends_on) this.depends_on.forEach(feature => this.featureDependencyIds.push(feature.id));
 
@@ -42,6 +44,8 @@ export class Feature extends ReplanElement {
     let aux = ReplanElement.staticDataService.getCachedFeature(j.id);
     if (aux) return aux;
     else {
+      let skills: Skill[] = j.required_skills ? Skill.fromJSONArray(j.required_skills) : [];
+      let dependencies = j.depends_on ? Feature.fromJSONArray(j.depends_on) : [];
       let f = new Feature(
         j.id,
         j.name,
@@ -50,17 +54,16 @@ export class Feature extends ReplanElement {
         j.effort,
         j.deadline,
         j.priority,
-        Skill.fromJSONArray(j['required_skills']),
-        Feature.fromJSONArray(j['depends_on'])
+        skills,
+        dependencies
       );
-      ReplanElement.staticDataService.cacheElement(f);
+      if (j.depends_on && j.required_skills) ReplanElement.staticDataService.cacheElement(f);
       return f;
     }
   }
 
   static fromJSONArray(j: any): Feature[] {
     let features: Feature[] = [];
-    //j.forEach(feature => features.push(this.fromJSON(feature)));
     if (!Config.suppressElementCreationMessages) Log.i('Creating several Features from:', j);
     for (let i = 0; i < j.length; ++i) {
       features.push(Feature.fromJSON(j[i]));
@@ -71,7 +74,7 @@ export class Feature extends ReplanElement {
 
   clone(): ReplanElement {
     let aux = new Feature(
-      this.id,  // TODO: Is this actually valid?
+      this.id,  // TODO: Is this actually valid? Doesn't seem to break anything
       this.name,
       this.description,
       this.code,
@@ -112,10 +115,26 @@ export class Feature extends ReplanElement {
   }
 
   addSkill(s: Skill): void {
+    if (!this.required_skills) this.required_skills = [];
     this.required_skills.push(s);
   }
 
   removeSkill(s: Skill): void {
-    this.required_skills.splice(this.required_skills.indexOf(s), 1);
+    if (!this.required_skills) return;
+    else {
+      this.required_skills.splice(this.required_skills.indexOf(s), 1);
+    }
+  }
+
+  addDependency(f: Feature): void {
+    if (!this.depends_on) this.depends_on = [];
+    this.depends_on.push(f);
+  }
+
+  removeDependency(f: Feature): void {
+    if (!this.depends_on) return;
+    else {
+      this.depends_on.splice(this.depends_on.indexOf(f), 1);
+    }
   }
 }

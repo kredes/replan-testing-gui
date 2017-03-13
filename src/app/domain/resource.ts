@@ -35,10 +35,7 @@ export class Resource extends ReplanElement implements OnChanges {
 
 
     let aux = ReplanElement.staticDataService.getCachedResource(j.id);
-    if (aux) {
-      console.log("Got a resource that was cached");
-      return aux;
-    }
+    if (aux) return aux;
     else {
       let res = new Resource(
         j.id,
@@ -103,5 +100,20 @@ export class Resource extends ReplanElement implements OnChanges {
   addRelease(r: Release): void {
     if (!this.releases) this.releases = [];
     this.releases.push(r);
+  }
+
+  removeRelease(r: Release): void {
+    if (!this.releases) return;
+    else this.releases.splice(this.releases.indexOf(r), 1);
+  }
+
+  addSkill(s: Skill): void {
+    if (!this.skills) this.skills = [];
+    this.skills.push(s);
+  }
+
+  removeSkill(s: Skill): void {
+    if (!this.skills) return;
+    else this.skills.splice(this.skills.indexOf(s), 1);
   }
 }

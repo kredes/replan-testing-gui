@@ -27,16 +27,7 @@ export class ResourceDetailComponent extends ElementDetailComponent implements O
     if (this.createElement) this.element = new Resource(null, null, null, null, []);
 
     let elem = this.element as Resource;
-/*
-    if (elem.skills) elem.skills.forEach(s => this.oldSkills.push(s.id));
 
-
-    console.log("RELEASES", elem.releases);
-    //Utils.waitUntilExists(elem.releases);
-    if (elem.releases) elem.releases.forEach(r => {
-      console.debug("OLD RELEASE", r);
-      this.oldReleases.push(r.id)
-    });*/
     super.ngOnInit();
   }
 
@@ -70,7 +61,7 @@ export class ResourceDetailComponent extends ElementDetailComponent implements O
     let id = parseInt(target.value);
     let checked = target.checked;
 
-    console.info("Release with id", id, "is now", checked ? "checked" : "unchecked");
+    //console.info("Release with id", id, "is now", checked ? "checked" : "unchecked");
     if (checked) {
       if (!(this.oldReleases.indexOf(id) > -1)) this.releasesToAdd.push(id);
       else if (this.releasesToRemove.indexOf(id) > -1) this.releasesToRemove.splice(this.releasesToRemove.indexOf(id), 1);
@@ -79,34 +70,76 @@ export class ResourceDetailComponent extends ElementDetailComponent implements O
       if (this.oldReleases.indexOf(id) > -1) this.releasesToRemove.push(id);
       else this.releasesToAdd.splice(this.releasesToAdd.indexOf(id), 1);
     }
-    console.debug("STATUS AFTER CHANGE:");
-    console.debug("oldReleases:", this.oldReleases, "releasesToAdd:", this.releasesToAdd, "releasesToRemove:", this.releasesToRemove);
+    //console.debug("STATUS AFTER CHANGE:");
+    //console.debug("oldReleases:", this.oldReleases, "releasesToAdd:", this.releasesToAdd, "releasesToRemove:", this.releasesToRemove);
   }
 
   assignToProject(projId: number) {
     this.element.dataService.moveResourceToProject(this.element as Resource, projId);
   }
 
-  assignToRelease(relId: number) {
-    //this.element.dataService.moveResourceToRelease(this.element as Resource, (this.element as Resource).release.id, relId);
-  }
-
   update(): void {
-    if (this.skillsToAdd.length > 0 || this.skillsToRemove.length > 0) {
-      if (this.skillsToAdd.length > 0) {
-        this.element.dataService.addSkillsToResource(this.element as Resource, this.skillsToAdd);
-      }
-      if (this.skillsToRemove.length > 0) {
-        this.element.dataService.removeSkillsFromResource(this.element as Resource, this.skillsToRemove);
-      }
+    let res = this.element as Resource;
 
-      (this.element as Resource).skills.forEach(s => this.oldSkills.push(s.id));
+    if (this.skillsToAdd.length > 0) {
+      let skillsToAdd = this.skillsToAdd;
+      this.element.dataService.addSkillsToResource(this.element as Resource, this.skillsToAdd)
+        .then(resp => {
+          if (resp.ok) {
+            skillsToAdd.forEach(id => {
+              this.element.dataService.getSkill(id)
+                .then(f => res.addSkill(f));
+            });
+          }
+        });
+    }
+    if (this.skillsToRemove.length > 0) {
+      let skillsToRemove = this.skillsToRemove;
+      this.element.dataService.removeSkillsFromResource(this.element as Resource, this.skillsToRemove)
+        .then(resp => {
+          if (resp.ok) {
+            skillsToRemove.forEach(id => {
+              this.element.dataService.getSkill(id)
+                .then(f => res.removeSkill(f));
+            });
+          }
+        });
     }
 
-    this.releasesToAdd.forEach(id => this.element.dataService.addResourcesToRelease(id, [this.element.id]));
-    this.releasesToRemove.forEach(id => this.element.dataService.removeResourcesFromRelease(id, [this.element.id]));
+    let releasesToAdd = this.releasesToAdd;
+    this.releasesToAdd.forEach(id => {
+      this.element.dataService.addResourcesToRelease(id, [this.element.id])
+        .then(resp => {
+          if (resp.ok) {
+            releasesToAdd.forEach(id => {
+              this.element.dataService.getRelease(id)
+                .then(f => res.addRelease(f));
+            });
+          }
+        });
+    });
+    let releasesToRemove = this.releasesToRemove;
+    this.releasesToRemove.forEach(id => {
+      this.element.dataService.removeResourcesFromRelease(id, [this.element.id])
+        .then(resp => {
+          if (resp.ok) {
+            releasesToRemove.forEach(id => {
+              this.element.dataService.getRelease(id)
+                .then(f => res.removeRelease(f));
+            });
+          }
+        });
+    });
 
-    (this.element as Resource).releases.forEach(r => this.oldReleases.push(r.id));
+    this.oldSkills = [];
+    this.skillsToAdd = [];
+    this.skillsToRemove = [];
+    this.oldReleases = [];
+    this.releasesToRemove = [];
+    this.releasesToAdd = [];
+
+    res.skills.forEach(s => this.oldSkills.push(s.id));
+    res.releases.forEach(r => this.oldReleases.push(r.id));
 
     super.update();
   }

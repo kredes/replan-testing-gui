@@ -47,6 +47,34 @@
       </div>
       <!-- /Row 4 -->
 
+      <!-- Row 5 -->
+      <div *ngIf="element.project" class="grid-row">
+        <div class="grid-cell-100 labeled">
+          <label>features</label>
+          <!-- TODO: Make this expandable so it doesn't take up a shitton of space-->
+          <div class="checkbox-box">
+            <span *ngIf="element.features">
+              <label *ngFor="let feature of element.features">
+                <input (change)="onFeatureStateChange($event)"
+                       checked type="checkbox" name="feature-{{feature.id}}" value="{{feature.id}}"/>
+                {{feature.name}}<br>
+              </label>
+            </span>
+
+            <span *ngIf="element.project.features">
+              <span *ngFor="let feature of nonSelectedFeatures()" style="display: inline;">
+                <label>
+                  <input (change)="onFeatureStateChange($event)"
+                         type="checkbox" name="feature-{{feature.id}}" value="{{feature.id}}"/>
+                  {{feature.name}}
+                </label>
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
+      <!-- /Row 5 -->
+
       <!-- Buttons -->
       <div *ngIf="!createElement" class="grid-row">
         <div class="grid-cell-33 delete-button">

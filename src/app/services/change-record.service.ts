@@ -26,6 +26,7 @@ export class ChangeRecordService {
   }
 
   /* TODO: Make it return a deep copy
+  /* What was this TODO for?
   getAll(): Record[] {
     return this.records;
   }

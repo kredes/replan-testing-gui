@@ -97,7 +97,6 @@ export abstract class ReplanElement {
   update(addRecord: Boolean): void {
     this.dataService.updateElement(this)
       .then(response => {
-        console.table(response);
         if (addRecord) this.changeRecordService.addRecord(new Record(this, RecordType.UPDATE));
         this.onElementChange.onElementUpdated(this);
       });

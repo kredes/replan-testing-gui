@@ -29,7 +29,7 @@
   </nav>
   <nav id="breadcrumbs" class="grid-row">
     <div class="grid-cell-100">
-      <a href="#" style="text-decoration: none; padding-left: 10px;">All projects</a>
+      <a href="#" style="text-decoration: none; padding-left: 10px;" (click)="onTabSelected('AllProjects')">All projects</a>
       <span *ngFor="let element of breadcrumbs">
         &nbsp;&nbsp;>
         <a href="#" style="text-decoration: none; padding-left: 10px;"

@@ -92,7 +92,7 @@
               <label *ngFor="let feature of element.depends_on">
                 <input (change)="onDependencyStateChange($event)"
                   checked type="checkbox" name="feature-{{feature.id}}" value="{{feature.id}}"/>
-                {{feature.name}}
+                {{feature.name}}<br>
               </label>
             </span>
 
