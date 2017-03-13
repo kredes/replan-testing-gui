@@ -29,7 +29,7 @@
   </nav>
   <nav id="breadcrumbs" class="grid-row">
     <div class="grid-cell-100">
-      <a href="#" style="text-decoration: none; padding-left: 10px;" (click)="onTabSelected('AllProjects')">All projects</a>
+      <a href="#" style="text-decoration: none; padding-left: 10px;" (click)="onTabSelected('Projects')">All projects</a>
       <span *ngFor="let element of breadcrumbs">
         &nbsp;&nbsp;>
         <a href="#" style="text-decoration: none; padding-left: 10px;"
@@ -41,13 +41,13 @@
   <div class="clear"></div>
 
   <!-- CONTENT -->
-  <div *ngIf="activeElement">
+  <div>
     <div class="grid-cell-20">
-      <active-element [element]="activeElement" [onElementChange]="this"></active-element>
+      <active-element *ngIf="activeElement" [element]="activeElement" [onElementChange]="this"></active-element>
     </div>
 
     <div class="grid-cell-60">
-      <element-list [elements]="relatedElements" [onElementChange]="this" (elementSelected)="onElementSelected($event)"></element-list>
+      <element-list *ngIf="relatedElements" [elements]="relatedElements" [onElementChange]="this" (elementSelected)="onElementSelected($event)"></element-list>
     </div>
 
     <div class="grid-cell-20">

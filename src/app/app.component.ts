@@ -47,19 +47,27 @@ export class AppComponent implements OnInit, OnElementChange {
   }
 
   ngOnInit(): void {
-    this.controllerService.getProject(1)
+    /*this.controllerService.getProject(1)
       .then(project => {
         console.log(project);
         this.activeElement = project;
         this.validTabs = ["Resources", "Features", "Releases", "Skills"];
         this.onTabSelected("Resources");
         this.breadcrumbs.push(this.activeElement);
-      });
+      });*/
+    this.onTabSelected('Projects');
   }
 
   onActiveElementChange(): void {
     switch (this.activeElement.type) {
       case ReplanElemType.PROJECT:
+        let proj = this.activeElement as Project;
+
+        this.controllerService.clearCache();
+        this.controllerService.setActiveProject(proj.id);
+
+        proj.loadAsyncData();
+
         this.validTabs = ["Resources", "Features", "Releases", "Skills"];
         this.onTabSelected('Resources');
         break;
@@ -108,18 +116,25 @@ export class AppComponent implements OnInit, OnElementChange {
           this.relatedElements = elem.skills;
         }
         else if (elem instanceof Feature) {
-          console.log("WAITING FOR FEATURE'S SKILLS TO EXIST");
           Utils.waitUntilExists(elem.required_skills);
           this.relatedElements = elem.required_skills;
         }
         break;
       case 'Dependencies':
         if (elem instanceof Feature) {
-          console.log("Gonna show dependencies of the feature", elem);
           Utils.waitUntilExists(elem.depends_on);
           this.relatedElements = elem.depends_on;
         }
         break;
+      case 'Projects':
+        this.validTabs = ['Projects'];
+        this.breadcrumbs = [];
+        this._activeElement = null;
+        this.controllerService.getAllProjects()
+          .then(projects => {
+            console.log(projects);
+            this.relatedElements = projects
+          });
       case 'None':
       default:
         this.relatedElements = [];

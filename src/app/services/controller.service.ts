@@ -16,6 +16,7 @@ export class ControllerService {
   //private apiUrl = 'http://62.14.219.13:8280/replan';
   private basePath: string;
   currentProjectId: number;
+  previousProjectId: number;
   //= 'http://localhost:3000/api/ui/v1/projects/1';
 
 
@@ -38,10 +39,24 @@ export class ControllerService {
   }
 
   setActiveProject(projId: number) {
+    this.previousProjectId = this.currentProjectId;
     this.currentProjectId = projId;
     this.basePath = this.apiUrl + '/projects/' + projId;
   }
+  restorePreviousActiveProject(): void {
+    let aux = this.previousProjectId;
+    this.previousProjectId = this.currentProjectId;
+    this.currentProjectId = aux;
+  }
 
+  clearCache(): void {
+    this.features = {};
+    this.projects = {};
+    this.resources = {};
+    this.releases = {};
+    this.skills = {};
+    console.info("All caches cleared");
+  }
 
   /* GENERIC METHODS */
   removeElement(element: ReplanElement): Promise<Object> {
@@ -147,7 +162,7 @@ export class ControllerService {
         response.json().forEach(jsonFeat => {
           if (jsonFeat.id in this.projects) {
             //console.log("Project: cache hit");
-            projects.push(this.features[jsonFeat.id]);
+            projects.push(this.projects[jsonFeat.id]);
           }
           else {
             //console.log("Project: cache miss");
@@ -380,6 +395,21 @@ export class ControllerService {
 
 
   /* CREATIONS */
+  createProject(project: Project): Promise<any> {
+    let body: Object = {
+      'name': project.name,
+      'description': project.description,
+      'effort_unit': project.effort_unit,
+      'hours_per_effort_unit': project.hours_per_effort_unit,
+      'hours_per_week_and_full_time_resource': project.hours_per_week_and_full_time_resource
+    };
+    return this.http.post(this.apiUrl + '/projects', body)
+      .toPromise()
+      .then(response => {
+        return response;
+      })
+      .catch(this.handleError);
+  }
   createRelease(release: Release): Promise<any> {
     let body: Object = {
       'name': release.name,
@@ -475,7 +505,7 @@ export class ControllerService {
       .catch(this.handleError);
   }
   deleteProject(project: Project): Promise<any> {
-    return this.http.delete(this.apiUrl + '/projects' + project.id)
+    return this.http.delete(this.apiUrl + '/projects/' + project.id)
       .toPromise()
       .then(response => {
         this.uncacheElement(project);

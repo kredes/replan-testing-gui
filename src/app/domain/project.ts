@@ -29,24 +29,6 @@ export class Project extends ReplanElement {
   ) {
     super(id, name, description, ReplanElemType.PROJECT);
 
-    this.dataService.getSkillsOf(this)
-      .then(skills => {
-        this.skills = skills
-      });
-
-
-    this.dataService.getFeaturesOf(this)
-      .then(features => {
-        this.features = features;
-        this.features.forEach(feature => feature.project = this);
-      });
-
-    this.dataService.getReleasesOf(this)
-      .then(releases => {
-        this.releases = releases;
-        this.releases.forEach(r => r.project = this);
-      });
-
     this.resources.forEach(resource => {
       this.resourceIds.push(resource.id);
       resource.project = this;
@@ -61,6 +43,25 @@ export class Project extends ReplanElement {
     this.addChange('hours_per_week_and_full_time_resource', this.hours_per_week_and_full_time_resource);
     this.addChange('resources', this.resources);
     this.addChange('resourceIds', this.resourceIds);
+  }
+
+  loadAsyncData(): void {
+    this.dataService.getSkillsOf(this)
+      .then(skills => {
+        this.skills = skills
+      });
+
+    this.dataService.getFeaturesOf(this)
+      .then(features => {
+        this.features = features;
+        this.features.forEach(feature => feature.project = this);
+      });
+
+    this.dataService.getReleasesOf(this)
+      .then(releases => {
+        this.releases = releases;
+        this.releases.forEach(r => r.project = this);
+      });
   }
 
   getSkills(): Skill[] {
@@ -115,7 +116,15 @@ export class Project extends ReplanElement {
   }
 
   /* GATEWAY */
-  save(): void {
-    // TODO: There's a new call for this now
+  save(addRecord: Boolean): void {
+    this.dataService.createProject(this)
+      .then(response => {
+        let proj = Project.fromJSON(response.json());
+        this.attributes.forEach(attr => this[attr] = proj[attr]);
+
+        this.dataService.cacheElement(this);
+        if (addRecord) this.changeRecordService.addRecord(new Record(this, RecordType.CREATION));
+        this.onElementChange.onElementCreated(this);
+      });
   }
 }

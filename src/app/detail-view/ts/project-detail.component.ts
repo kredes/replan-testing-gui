@@ -9,7 +9,7 @@ import {Project} from "../../domain/project";
 })
 export class ProjectDetailComponent extends ElementDetailComponent implements OnInit {
   ngOnInit(): void {
-    if (this.createElement) this.element = new Project(null, null, null, null, null, null, null);
+    if (this.createElement) this.element = new Project(null, null, null, null, null, null, []);
     super.ngOnInit();
   }
 }

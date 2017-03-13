@@ -10,12 +10,12 @@
       <div class="grid-row">
         <div class="grid-cell-30 labeled">
           <label>id</label>
-          <input disabled type="text" value="{{element.id}}" />
+          <input disabled type="text" value="{{createElement ? '' : element.id}}" />
         </div>
 
         <div class="grid-cell-70 labeled">
           <label>name</label>
-          <input disabled type="text" value="{{element.name}}" />
+          <input #d (blur)="element.name=d.value" disabled="{{createElement ? null : true}}" type="text" value="{{createElement ? '' : element.name}}" />
         </div>
       </div>
       <!-- /Row 1 -->
@@ -24,7 +24,7 @@
       <div class="grid-row">
         <div class="grid-cell-100 labeled">
           <label>description</label>
-          <textarea disabled>{{element.description}}</textarea>
+          <textarea #e (blur)="element.description=e.value" disabled="{{createElement ? null : true}}">{{createElement ? '' : element.description}}</textarea>
         </div>
       </div>
       <!-- /Row 2 -->
@@ -33,11 +33,11 @@
       <div class="grid-row">
         <div class="grid-cell-50 labeled">
           <label>effort_unit</label>
-          <input #a (blur)="element.name=a.value" name="effort_unit" type="text" value="{{createElement ? '' : element.effort_unit}}">
+          <input #a (blur)="element.effort_unit=a.value" name="effort_unit" type="text" value="{{createElement ? '' : element.effort_unit}}">
         </div>
         <div class="grid-cell-50 labeled">
           <label>hours_per_effort_unit</label>
-          <input #b (blur)="element.hours_per_effort_unit=a.value" name="hours_per_effort_unit" type="text" value="{{createElement ? '' : element.hours_per_effort_unit}}">
+          <input #b (blur)="element.hours_per_effort_unit=b.value" name="hours_per_effort_unit" type="text" value="{{createElement ? '' : element.hours_per_effort_unit}}">
         </div>
       </div>
       <!-- /Row 3 -->
@@ -46,7 +46,7 @@
       <div class="grid-row">
         <div class="grid-cell-100 labeled">
           <label>hours_per_week_and_full_time_resource</label>
-          <input #c (blur)="element.hours_per_week_and_full_time_resource=a.value" name="hours_per_week_and_full_time_resource" type="text" value="{{createElement ? '' : element.hours_per_week_and_full_time_resource}}">
+          <input #c (blur)="element.hours_per_week_and_full_time_resource=c.value" name="hours_per_week_and_full_time_resource" type="text" value="{{createElement ? '' : element.hours_per_week_and_full_time_resource}}">
         </div>
       </div>
 

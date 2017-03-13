@@ -6,6 +6,7 @@
   <feature-detail *ngFor="let elem of elements" [element]="elem" [createElement]="false"
                   [onElementChange]="onElementChange" (elementSelected)="onElementSelected($event)"></feature-detail>
   <feature-detail *ngIf="createElement" [createElement]="true" [onElementChange]="onElementChange" (elementCreated)="elementCreated()"></feature-detail>
+  <div *ngIf="elements.length == 0">Nothing to show.</div>
 </div>
 
 <div *ngIf="areProjects">
@@ -16,6 +17,7 @@
   <project-detail *ngFor="let elem of elements" [element]="elem" [createElement]="false"
                   [onElementChange]="onElementChange" (elementSelected)="onElementSelected($event)"></project-detail>
   <project-detail *ngIf="createElement" [createElement]="true" [onElementChange]="onElementChange" (elementCreated)="elementCreated()"></project-detail>
+  <div *ngIf="elements.length == 0">Nothing to show.</div>
 </div>
 
 <div *ngIf="areReleases">
@@ -26,6 +28,7 @@
   <release-detail *ngFor="let elem of elements" [element]="elem" [createElement]="false"
                   [onElementChange]="onElementChange"(elementSelected)="onElementSelected($event)"></release-detail>
   <release-detail *ngIf="createElement" [createElement]="true" [onElementChange]="onElementChange" (elementCreated)="elementCreated()"></release-detail>
+  <div *ngIf="elements.length == 0">Nothing to show.</div>
 </div>
 
 
@@ -37,6 +40,7 @@
   <resource-detail *ngFor="let elem of elements" [element]="elem" [createElement]="false"
                    [onElementChange]="onElementChange" (elementSelected)="onElementSelected($event)"></resource-detail>
   <resource-detail *ngIf="createElement" [createElement]="true" [onElementChange]="onElementChange" (elementCreated)="elementCreated()"></resource-detail>
+  <div *ngIf="elements.length == 0">Nothing to show.</div>
 </div>
 
 
@@ -48,5 +52,7 @@
   <skill-detail *ngFor="let elem of elements" [element]="elem" [createElement]="false"
                 [onElementChange]="onElementChange"(elementSelected)="onElementSelected($event)"></skill-detail>
   <skill-detail *ngIf="createElement" [createElement]="true" [onElementChange]="onElementChange" (elementCreated)="elementCreated()"></skill-detail>
+  <div *ngIf="elements.length == 0">Nothing to show.</div>
 </div>
 
+<div *ngIf="elements.length == 0"><p style="text-align: center;">Nothing to show.</p></div>

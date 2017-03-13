@@ -43,8 +43,6 @@ export class ElementListComponent implements DoCheck {
         valid = false;
         console.error('Element list provided with array of invalid elements');
       }
-    } else {
-      console.info('Element list provided with empty array');
     }
   }
 
