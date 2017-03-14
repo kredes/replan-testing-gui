@@ -41,7 +41,7 @@ export class Project extends ReplanElement {
     this.addChange('effort_unit', this.effort_unit);
     this.addChange('hours_per_effort_unit', this.hours_per_effort_unit);
     this.addChange('hours_per_week_and_full_time_resource', this.hours_per_week_and_full_time_resource);
-    this.addChange('resources', this.resources);
+    //this.addChange('resources', this.resources);
     this.addChange('resourceIds', this.resourceIds);
   }
 
@@ -73,7 +73,7 @@ export class Project extends ReplanElement {
     return aux;
   }
 
-  static fromJSON(j: any): Project {
+  static fromJSON(j: any, cache: Boolean): Project {
     if (!Config.suppressElementCreationMessages) Log.i('Creating Project from:', j);
 
     let aux = ReplanElement.staticDataService.getCachedProject(j.id);
@@ -88,14 +88,14 @@ export class Project extends ReplanElement {
         j.hours_per_week_and_full_time_resource,
         Resource.fromJSONArray(j.resources)
       );
-      ReplanElement.staticDataService.cacheElement(p);
+      if (cache) ReplanElement.staticDataService.cacheElement(p);
       return p;
     }
   }
 
   static fromJSONArray(j: any): Project[] {
     let projects: Project[] = [];
-    j.forEach(project => projects.push(this.fromJSON(project)));
+    j.forEach(project => projects.push(this.fromJSON(project, true)));
     return projects;
   }
 
@@ -119,9 +119,13 @@ export class Project extends ReplanElement {
   save(addRecord: Boolean): void {
     this.dataService.createProject(this)
       .then(response => {
-        let proj = Project.fromJSON(response.json());
+        let proj = Project.fromJSON(response.json(), false);
         this.attributes.forEach(attr => this[attr] = proj[attr]);
 
+        /*
+          A small detail here: When I create proj above it gets cached, but the cache version is then replaced
+          with this object on this statement. This is nice.
+         */
         this.dataService.cacheElement(this);
         if (addRecord) this.changeRecordService.addRecord(new Record(this, RecordType.CREATION));
         this.onElementChange.onElementCreated(this);

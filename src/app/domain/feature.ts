@@ -38,7 +38,7 @@ export class Feature extends ReplanElement {
   }
 
 
-  static fromJSON(j: any): Feature {
+  static fromJSON(j: any, cache: Boolean): Feature {
     if (!Config.suppressElementCreationMessages) Log.i('Creating Feature from:', j);
 
     let aux = ReplanElement.staticDataService.getCachedFeature(j.id);
@@ -57,7 +57,7 @@ export class Feature extends ReplanElement {
         skills,
         dependencies
       );
-      if (j.depends_on && j.required_skills) ReplanElement.staticDataService.cacheElement(f);
+      if (j.depends_on && j.required_skills && cache) ReplanElement.staticDataService.cacheElement(f);
       return f;
     }
   }
@@ -66,7 +66,7 @@ export class Feature extends ReplanElement {
     let features: Feature[] = [];
     if (!Config.suppressElementCreationMessages) Log.i('Creating several Features from:', j);
     for (let i = 0; i < j.length; ++i) {
-      features.push(Feature.fromJSON(j[i]));
+      features.push(Feature.fromJSON(j[i], true));
     }
     return features;
   }
@@ -94,7 +94,7 @@ export class Feature extends ReplanElement {
   save(addRecord: Boolean): void {
     this.dataService.createFeature(this)
       .then(response => {
-        let feat = Feature.fromJSON(response.json());
+        let feat = Feature.fromJSON(response.json(), false);
         this.attributes.forEach(attr => this[attr] = feat[attr]);
 
         this.dataService.cacheElement(this);

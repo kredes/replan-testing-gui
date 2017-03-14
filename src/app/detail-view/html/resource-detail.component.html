@@ -64,33 +64,6 @@
       <!-- /Row 3 -->
 
       <!-- Row 4 -->
-      <div *ngIf="!createElement && this.element.project" class="grid-row">
-        <div class="grid-cell-100 labeled">
-          <label>assigned to releases</label>
-          <div class="checkbox-box">
-            <div *ngIf="element.releases && element.releases.length > 0">
-              <label *ngFor="let release of element.releases">
-                <input (change)="onReleaseStateChange($event)"
-                       checked type="checkbox" name="skill-{{release.id}}" value="{{release.id}}"/>
-                {{release.name}}
-              </label>
-            </div>
-
-            <div *ngIf="element.project.releases">
-              <span *ngFor="let release of this.nonSelectedReleases()" style="display: inline;">
-                <label>
-                  <input (change)="onReleaseStateChange($event)"
-                    type="checkbox" name="release-{{release.id}}" value="{{release.id}}"/>
-                  {{release.name}}
-                </label>
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- /Row 4 -->
-
-      <!-- Row 5 -->
       <div *ngIf="!createElement && element.project" class="grid-row">
         <div class="grid-cell-100 labeled">
           <label>skills</label>
@@ -116,7 +89,7 @@
           </div>
         </div>
       </div>
-      <!-- /Row 5 -->
+      <!-- /Row 4 -->
 
       <!-- Buttons -->
       <div *ngIf="!createElement" class="grid-row">

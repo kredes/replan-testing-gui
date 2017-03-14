@@ -132,8 +132,8 @@ export class FeatureDetailComponent extends ElementDetailComponent implements On
     this.dependenciesToAdd = [];
     this.dependenciesToRemove = [];
 
-    feat.required_skills.forEach(s => this.oldSkills.push(s.id));
-    feat.depends_on.forEach(s => this.oldDependencies.push(s.id));
+    if (feat.required_skills) feat.required_skills.forEach(s => this.oldSkills.push(s.id));
+    if (feat.depends_on) feat.depends_on.forEach(s => this.oldDependencies.push(s.id));
 
     super.update();
   }

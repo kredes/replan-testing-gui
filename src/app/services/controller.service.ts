@@ -135,6 +135,7 @@ export class ControllerService {
         delete this.features[element.id];
         break;
       case ReplanElemType.RESOURCE:
+        console.log("Uncaching element with id", element.id);
         delete this.resources[element.id];
         break;
       case ReplanElemType.RELEASE:
@@ -166,7 +167,7 @@ export class ControllerService {
           }
           else {
             //console.log("Project: cache miss");
-            projects.push(Project.fromJSON(jsonFeat));
+            projects.push(Project.fromJSON(jsonFeat, true));
           }
         });
         return projects;
@@ -192,6 +193,9 @@ export class ControllerService {
     else return null;
   }
   getCachedResource(id: number): Resource {
+
+    console.info("Trying to get Resource with id", id, "from cache");
+    console.info("Cache:", this.resources);
     if (this.resources[id]) return this.resources[id];
     else return null;
   }
@@ -201,7 +205,7 @@ export class ControllerService {
     if (aux) return Promise.resolve(aux);
     else return this.http.get(this.apiUrl + "/projects/" + id)
       .toPromise()
-      .then(response => Project.fromJSON(response.json()))
+      .then(response => Project.fromJSON(response.json(), true))
       .catch(this.handleError);
   };
   getRelease(id: number): Promise<Release> {
@@ -277,7 +281,7 @@ export class ControllerService {
             }
             else {
               //console.log("Feature: cache miss");
-              features.push(Feature.fromJSON(jsonFeat));
+              features.push(Feature.fromJSON(jsonFeat, true));
             }
           });
           return features;
@@ -313,7 +317,7 @@ export class ControllerService {
             }
             else {
               //console.log("Resource: cache miss");
-              resources.push(Resource.fromJSON(jsonFeat, false));
+              resources.push(Resource.fromJSON(jsonFeat, true));
             }
           });
           return resources;
@@ -352,7 +356,7 @@ export class ControllerService {
             }
             else {
               //console.log("Skill: cache miss");
-              skills.push(Skill.fromJSON(jsonFeat, false));
+              skills.push(Skill.fromJSON(jsonFeat, true));
             }
           });
           return skills;
@@ -367,25 +371,28 @@ export class ControllerService {
 
   getReleasesOf(element: any): Promise<Release[]> {
     if (element instanceof Project) {
-      return this.http.get(this.basePath + '/releases')
-        .toPromise()
-        .then(response => {
-          let releases: Release[] = [];
+      if (element.releases) return Promise.resolve(element.releases);
+        else {
+        return this.http.get(this.basePath + '/releases')
+          .toPromise()
+          .then(response => {
+            let releases: Release[] = [];
 
-          response.json().forEach(jsonFeat => {
-            if (jsonFeat.id in this.releases) {
-              //console.log("Release: cache hit");
-              releases.push(this.releases[jsonFeat.id]);
-            }
-            else {
-              //console.log("Release: cache miss");
-              releases.push(Release.fromJSON(jsonFeat, false));
-            }
-          });
-          return releases;
-          //return Skill.fromJSONArray(response.json();
-        })
-        .catch(this.handleError);
+            response.json().forEach(jsonFeat => {
+              if (jsonFeat.id in this.releases) {
+                //console.log("Release: cache hit");
+                releases.push(this.releases[jsonFeat.id]);
+              }
+              else {
+                //console.log("Release: cache miss");
+                releases.push(Release.fromJSON(jsonFeat, true));
+              }
+            });
+            return releases;
+            //return Skill.fromJSONArray(response.json();
+          })
+          .catch(this.handleError);
+      }
     } else {
       console.error("The element supplied cannnot have releases associated.");
       return null;
@@ -537,7 +544,7 @@ export class ControllerService {
       'hours_per_effort_unit': project.hours_per_effort_unit,
       'hours_per_week_and_full_time_resource': project.hours_per_week_and_full_time_resource
     };
-    return this.http.put(this.basePath, body)
+    return this.http.put(this.apiUrl + '/projects/' + project.id, body)
       .toPromise()
       .then(response => response)
       .catch(this.handleError)
@@ -546,6 +553,7 @@ export class ControllerService {
   updateRelease(release: Release): Promise<Object> {
     let body: Object = {
       'name': release.name,
+      'starts_at': release.starts_at,
       'description': release.description,
       'deadline': release.deadline
     };

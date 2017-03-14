@@ -24,6 +24,7 @@ export class AppComponent implements OnInit, OnElementChange {
 
   private _activeElement: any = null;
   relatedElements: ReplanElement[] = [];
+  relatedElementsName: string;
   selectedTab: string = null;
   createElement: Boolean = false;
   breadcrumbs: ReplanElement[] = [];
@@ -97,18 +98,23 @@ export class AppComponent implements OnInit, OnElementChange {
       case 'Resources':
         if (elem instanceof Project || elem instanceof Release) {
           Utils.waitUntilExists(elem.resources);
+          this.relatedElementsName = 'resource';
           this.relatedElements = elem.resources;
         }
         break;
       case 'Features':
         if (elem instanceof Project) {
           Utils.waitUntilExists(elem.features);
+          this.relatedElementsName = 'feature';
           this.relatedElements = elem.features;
         }
         break;
       case 'Releases':
         this.controllerService.getReleasesOf(this.activeElement)
-          .then(releases => this.relatedElements = releases);
+          .then(releases => {
+            this.relatedElementsName = 'release';
+            this.relatedElements = releases
+          });
         break;
       case 'Skills':
         if (elem instanceof Project ||elem instanceof Resource) {
@@ -119,10 +125,12 @@ export class AppComponent implements OnInit, OnElementChange {
           Utils.waitUntilExists(elem.required_skills);
           this.relatedElements = elem.required_skills;
         }
+        this.relatedElementsName = 'skill';
         break;
       case 'Dependencies':
         if (elem instanceof Feature) {
           Utils.waitUntilExists(elem.depends_on);
+          this.relatedElementsName = 'feature';
           this.relatedElements = elem.depends_on;
         }
         break;
@@ -133,10 +141,12 @@ export class AppComponent implements OnInit, OnElementChange {
         this.controllerService.getAllProjects()
           .then(projects => {
             console.log(projects);
+            this.relatedElementsName = 'project';
             this.relatedElements = projects
           });
       case 'None':
       default:
+        this.relatedElementsName = '';
         this.relatedElements = [];
         break;
     }

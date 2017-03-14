@@ -30,7 +30,7 @@ export class Skill extends ReplanElement {
         j.name,
         j.description
       );
-      ReplanElement.staticDataService.cacheElement(s);
+      if (cache) ReplanElement.staticDataService.cacheElement(s);
       return s;
     }
   }

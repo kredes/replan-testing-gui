@@ -15,7 +15,7 @@ export class Resource extends ReplanElement implements OnChanges {
 
   skillIds: number[] = [];
   project: Project;
-  releases: Release[];
+  releases: Release[] = [];
 
   constructor(
     id: number,
@@ -44,7 +44,7 @@ export class Resource extends ReplanElement implements OnChanges {
         j.availability,
         Skill.fromJSONArray(j.skills)
       );
-      ReplanElement.staticDataService.cacheElement(res);
+      if (cache) ReplanElement.staticDataService.cacheElement(res);
       return res;
     }
   }
@@ -81,6 +81,7 @@ export class Resource extends ReplanElement implements OnChanges {
         this.attributes.forEach(attr => this[attr] = res[attr]);
 
         this.dataService.cacheElement(this);
+
         if (addRecord) this.changeRecordService.addRecord(new Record(this, RecordType.CREATION));
         this.onElementChange.onElementCreated(this);
       });

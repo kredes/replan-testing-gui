@@ -75,6 +75,34 @@
       </div>
       <!-- /Row 5 -->
 
+      <!-- Row 6 -->
+      <div *ngIf="element.project" class="grid-row">
+        <div class="grid-cell-100 labeled">
+          <label>resources</label>
+          <!-- TODO: Make this expandable so it doesn't take up a shitton of space-->
+          <div class="checkbox-box">
+            <span *ngIf="element.resources">
+              <label *ngFor="let resource of element.resources">
+                <input (change)="onResourceStateChange($event)"
+                       checked type="checkbox" name="resource-{{resource.id}}" value="{{resource.id}}"/>
+                {{resource.name}}<br>
+              </label>
+            </span>
+
+            <span *ngIf="element.project.resources">
+              <span *ngFor="let resource of nonSelectedResources()" style="display: inline;">
+                <label>
+                  <input (change)="onResourceStateChange($event)"
+                         type="checkbox" name="resource-{{resource.id}}" value="{{resource.id}}"/>
+                  {{resource.name}}
+                </label>
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
+      <!-- /Row 6 -->
+
       <!-- Buttons -->
       <div *ngIf="!createElement" class="grid-row">
         <div class="grid-cell-33 delete-button">

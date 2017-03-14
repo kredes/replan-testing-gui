@@ -2,6 +2,7 @@ import {Component, OnInit, DoCheck} from "@angular/core";
 import {ElementDetailComponent} from "./element-detail.component";
 import {Release} from "../../domain/release";
 import {Feature} from "../../domain/feature";
+import {Resource} from "../../domain/resource";
 
 @Component({
   selector: 'release-detail',
@@ -14,14 +15,20 @@ export class ReleaseDetailComponent extends ElementDetailComponent  implements O
   featuresToRemove: number[] = [];
   featuresToAdd: number[] = [];
 
+  oldResources: number[] = [];
+  resourcesToAdd: number[] = [];
+  resourcesToRemove: number[] = [];
+
+
   ngOnInit(): void {
-    if (this.createElement) this.element = new Release(null, null, null, null, null, null);
+    if (this.createElement) this.element = new Release(null, null, null, null, null, []);
     super.ngOnInit();
   }
 
   ngDoCheck(): void {
     let elem = this.element as Release;
     if (this.oldFeatures.length == 0 && elem.features) elem.features.forEach(s => this.oldFeatures.push(s.id));
+    if (this.oldResources.length == 0 && elem.resources) elem.resources.forEach(s => this.oldResources.push(s.id));
   }
 
   onFeatureStateChange(event: Event) {
@@ -42,6 +49,26 @@ export class ReleaseDetailComponent extends ElementDetailComponent  implements O
 
     console.debug("STATUS AFTER CHANGE:");
     console.debug("oldFeatures:", this.oldFeatures, "featuresToAdd:", this.featuresToAdd, "featuresToRemove:", this.featuresToRemove);
+  }
+
+  onResourceStateChange(event: Event) {
+    let target = event.target as HTMLInputElement;
+    let id = parseInt(target.value);
+    let checked = target.checked;
+
+    console.info("Resource with id", id, "is now", checked ? "checked" : "unchecked");
+
+    if (checked) {
+      if (!(this.oldResources.indexOf(id) > -1)) this.resourcesToAdd.push(id);
+      else if (this.resourcesToRemove.indexOf(id) > -1) this.resourcesToRemove.splice(this.resourcesToRemove.indexOf(id), 1);
+    }
+    else {
+      if (this.oldResources.indexOf(id) > -1) this.resourcesToRemove.push(id);
+      else this.resourcesToAdd.splice(this.resourcesToAdd.indexOf(id), 1);
+    }
+
+    console.debug("STATUS AFTER CHANGE:");
+    console.debug("oldResources:", this.oldResources, "resourcesToAdd:", this.resourcesToAdd, "resourcesToRemove:", this.resourcesToRemove);
   }
 
   update(): void {
@@ -72,15 +99,44 @@ export class ReleaseDetailComponent extends ElementDetailComponent  implements O
         });
     }
 
+    if (this.resourcesToAdd.length > 0) {
+      let resourcesToAdd = this.resourcesToAdd;
+      this.element.dataService.addResourcesToRelease(this.element.id, this.resourcesToAdd)
+        .then(resp => {
+          if (resp.ok) {
+            resourcesToAdd.forEach(id => {
+              this.element.dataService.getResource(id)
+                .then(f => rel.addResource(f));
+            });
+          }
+        });
+    }
+    if (this.resourcesToRemove.length > 0) {
+      let resourcesToRemove = this.resourcesToRemove;
+      this.element.dataService.removeResourcesFromRelease(this.element.id, this.resourcesToRemove)
+        .then(resp => {
+          if (resp.ok) {
+            resourcesToRemove.forEach(id => {
+              this.element.dataService.getResource(id)
+                .then(f => rel.removeResource(f));
+            });
+          }
+        });
+    }
+
     this.oldFeatures = [];
     this.featuresToAdd = [];
     this.featuresToRemove = [];
+    this.oldResources = [];
+    this.resourcesToAdd = [];
+    this.resourcesToRemove = [];
 
-    console.log(this.oldFeatures);
+    //console.log(this.oldFeatures);
 
-    rel.features.forEach(s => this.oldFeatures.push(s.id));
+    if (rel.features) rel.features.forEach(s => this.oldFeatures.push(s.id));
+    if (rel.resources) rel.resources.forEach(s => this.oldResources.push(s.id));
 
-    console.log(this.oldFeatures);
+    //console.log(this.oldFeatures);
 
     super.update();
   }
@@ -93,5 +149,15 @@ export class ReleaseDetailComponent extends ElementDetailComponent  implements O
     if (!features) return all;
 
     return all.filter(function(s) {return features.indexOf(s) < 0;});
+  }
+
+  nonSelectedResources(): Resource[] {
+    let elem = this.element as Release;
+    let all = elem.project.resources;
+    let resources = elem.resources;
+
+    if (!resources) return all;
+
+    return all.filter(function(s) {return resources.indexOf(s) < 0;});
   }
 }

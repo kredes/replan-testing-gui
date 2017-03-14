@@ -10,7 +10,7 @@ import {Project} from "./project";
 
 export class Release extends ReplanElement {
 
-  attributes: string[] = ['id', 'name', 'description', 'starts_at', 'deadline', 'resourceIds'];
+  attributes: string[] = ['id', 'name', 'description', 'starts_at', 'deadline', 'resourceIds', 'project'];
   resourceIds: number[] = [];
   features: Feature[];
   project: Project;
@@ -25,15 +25,17 @@ export class Release extends ReplanElement {
   ) {
     super(id, name, description, ReplanElemType.RELEASE);
 
-    this.dataService.getFeaturesOf(this)
-      .then(features => this.features = features);
-
     if (this.resources) this.resources.forEach(resource => {
       this.resourceIds.push(resource.id);
       resource.addRelease(this);
     });
 
     this.attributes.forEach(attr => this.addChange(attr, this[attr]));
+  }
+
+  loadAsyncData(): void {
+    this.dataService.getFeaturesOf(this)
+      .then(features => this.features = features);
   }
 
   static fromJSON(j: any, cache: Boolean): Release {
@@ -53,7 +55,8 @@ export class Release extends ReplanElement {
         j.deadline,
         Resource.fromJSONArray(j.resources)
       );
-      ReplanElement.staticDataService.cacheElement(rel);
+      rel.loadAsyncData();
+      if (cache) ReplanElement.staticDataService.cacheElement(rel);
       return rel;
     }
   }
@@ -86,6 +89,9 @@ export class Release extends ReplanElement {
         let res = Release.fromJSON(response.json(), false);
         this.attributes.forEach(attr => this[attr] = res[attr]);
 
+        this.dataService.getProject(this.dataService.currentProjectId)
+          .then(p => this.project = p);
+
         this.dataService.cacheElement(this);
         if (addRecord) this.changeRecordService.addRecord(new Record(this, RecordType.CREATION));
         this.onElementChange.onElementCreated(this);
@@ -100,5 +106,15 @@ export class Release extends ReplanElement {
   removeFeature(f: Feature): void {
     if (!this.features) return;
     this.features.splice(this.features.indexOf(f), 1);
+  }
+
+  addResource(r: Resource): void {
+    if (!this.resources) this.resources = [];
+    this.resources.push(r);
+  }
+
+  removeResource(r: Resource): void {
+    if (!this.resources) return;
+    this.resources.splice(this.resources.indexOf(r), 1);
   }
 }
