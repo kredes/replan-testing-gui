@@ -3,7 +3,7 @@ import {ElementDetailComponent} from "./element-detail.component";
 import {Skill} from "../../domain/skill";
 
 @Component({
-  moduleId: module.id,
+  //moduleId: module.id,
   selector: 'skill-detail',
   templateUrl: '../html/skill-detail.component.html',
   styleUrls: ['../../styles.css']

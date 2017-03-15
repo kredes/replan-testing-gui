@@ -9,7 +9,7 @@ import {Project} from "../../domain/project";
 import {Utils} from "../../utils";
 
 @Component({
-  moduleId: module.id,
+  //moduleId: module.id,
   selector: 'resource-detail',
   templateUrl: '../html/resource-detail.component.html',
   styleUrls: ['../../styles.css']
