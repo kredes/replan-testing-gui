@@ -5,7 +5,6 @@ import {Skill} from "../../domain/skill";
 import {Project} from "../../domain/project";
 
 @Component({
-  moduleId: module.id,
   selector: 'resource-detail',
   templateUrl: '../html/resource-detail.component.html',
   styleUrls: ['../../styles.css']

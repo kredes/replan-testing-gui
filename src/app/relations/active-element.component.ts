@@ -9,7 +9,6 @@ import {ReplanElement} from "../domain/replan-element";
 
 
 @Component({
-  moduleId: module.id,
   selector: 'active-element',
   templateUrl: 'active-element.component.html',
   styleUrls: ['../styles.css', './active-element.component.css']

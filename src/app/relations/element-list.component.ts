@@ -3,7 +3,6 @@ import {ReplanElement} from "../domain/replan-element";
 import {OnElementChange} from "../detail-view/ts/on-element-change";
 
 @Component({
-  moduleId: module.id,
   selector: 'element-list',
   templateUrl: 'element-list.component.html',
   styleUrls: ['../styles.css', './element-list.component.css']

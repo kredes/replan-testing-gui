@@ -5,7 +5,6 @@ import {OnRecordAdded} from "../services/on-record-added";
 
 
 @Component({
-  moduleId: module.id,
   selector: 'change-record',
   templateUrl: 'change-record.component.html',
   styleUrls: ['./change-record.component.css', '../styles.css'],
