@@ -5,7 +5,7 @@ import {EmitterVisitorContext} from "@angular/compiler/src/output/abstract_emitt
 
 
 @Component({
-  //moduleId: module.id,
+  moduleId: module.id,
   selector: 'record-detail',
   templateUrl: 'record-detail.component.html',
   styleUrls: ['./change-record.component.css', '../styles.css'],

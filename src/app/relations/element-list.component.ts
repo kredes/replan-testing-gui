@@ -1,9 +1,14 @@
-import {Component, Input, DoCheck, Output, EventEmitter} from "@angular/core";
+import {Component, Input, OnChanges, SimpleChanges, DoCheck, Output, EventEmitter} from "@angular/core";
+import {Release} from "../domain/release";
+import {Feature} from "../domain/feature";
+import {Resource} from "../domain/resource";
+import {Skill} from "../domain/skill";
+import {Project} from "../domain/project";
 import {ReplanElement} from "../domain/replan-element";
 import {OnElementChange} from "../detail-view/ts/on-element-change";
 
 @Component({
-  //moduleId: module.id,
+  moduleId: module.id,
   selector: 'element-list',
   templateUrl: 'element-list.component.html',
   styleUrls: ['../styles.css', './element-list.component.css']

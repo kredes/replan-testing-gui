@@ -5,7 +5,7 @@ import {ChangeRecordService} from "../../services/change-record.service";
 import {OnElementChange} from "./on-element-change";
 
 @Component({
-  //moduleId: module.id,
+  moduleId: module.id,
   selector: 'element-detail',
   template: 'Dummy. This should never show as it must be overriden by subclasses',
   styleUrls: ['../../styles.css']

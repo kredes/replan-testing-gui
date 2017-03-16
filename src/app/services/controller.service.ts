@@ -12,9 +12,8 @@ import {ReplanElemType} from "../domain/replan-elem-type";
 
 @Injectable()
 export class ControllerService {
-  //private _apiUrl = 'http://localhost:3000/api/ui/v1';
-  private _apiUrl = 'https://replan-project-carlesf.c9users.io/api/ui/v1';
-  //private _apiUrl = 'http://62.14.219.13:8280/replan';
+  private _apiUrl = 'http://localhost:3000/api/ui/v1';
+  //private apiUrl = 'http://62.14.219.13:8280/replan';
   private basePath: string;
   currentProjectId: number;
   previousProjectId: number;
