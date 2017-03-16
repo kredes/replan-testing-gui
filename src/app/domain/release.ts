@@ -14,6 +14,7 @@ export class Release extends ReplanElement {
   resourceIds: number[] = [];
   features: Feature[];
   project: Project;
+  plan: Object;
 
   constructor(
     id: number,
@@ -116,5 +117,16 @@ export class Release extends ReplanElement {
   removeResource(r: Resource): void {
     if (!this.resources) return;
     this.resources.splice(this.resources.indexOf(r), 1);
+  }
+
+  updatePlan(): void {
+    console.debug("Updating Plan");
+    this.dataService.getReleasePlan(this)
+      .then(response => this.plan = response.json());
+  }
+
+  getPlanAsString(): string {
+    if (this.plan) return JSON.stringify(this.plan, null, 2);
+    else return "There's no plan to show";
   }
 }

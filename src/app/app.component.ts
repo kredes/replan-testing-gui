@@ -25,6 +25,7 @@ export class AppComponent implements OnInit, OnElementChange {
   selectedTab: string = null;
   createElement: Boolean = false;
   breadcrumbs: ReplanElement[] = [];
+  showReleasePlan: Boolean;
 
   validTabs: string[];
 
@@ -78,7 +79,8 @@ export class AppComponent implements OnInit, OnElementChange {
         this.onTabSelected('Skills');
         break;
       case ReplanElemType.RELEASE:
-        this.validTabs = ['Resources'];
+        (this.activeElement as Release).plan = null;
+        this.validTabs = ['Resources', 'Features', 'Plan'];
         this.onTabSelected('Resources');
         break;
       case ReplanElemType.SKILL:
@@ -100,7 +102,7 @@ export class AppComponent implements OnInit, OnElementChange {
         }
         break;
       case 'Features':
-        if (elem instanceof Project) {
+        if (elem instanceof Project || elem instanceof Release) {
           Utils.waitUntilExists(elem.features);
           this.relatedElementsName = 'feature';
           this.relatedElements = elem.features;
@@ -144,9 +146,19 @@ export class AppComponent implements OnInit, OnElementChange {
       case 'None':
       default:
         this.relatedElementsName = '';
-        this.relatedElements = [];
+        this.relatedElements = null;
         break;
     }
+
+    if (tab == 'Plan') {
+      console.debug("Should show release plan");
+      (this.activeElement as Release).updatePlan();
+      console.log(this.activeElement as Release);
+      this.showReleasePlan = true;
+    } else {
+      this.showReleasePlan = false;
+    }
+
     this.selectedTab = tab;
   }
 
@@ -155,7 +167,6 @@ export class AppComponent implements OnInit, OnElementChange {
   }
 
   onElementCreated(element: ReplanElement): void {
-    console.info("Called onElementCreated at app.component.ts", element);
     this.relatedElements.push(element);
     console.log(this.relatedElements);
 
@@ -167,14 +178,13 @@ export class AppComponent implements OnInit, OnElementChange {
   }
 
   onElementDeleted(element: ReplanElement): void {
-    console.info("Called onElementDeleted at app.component.ts");
     if (this.relatedElements.length > 0 && element.type == this.relatedElements[0].type) {
       this.relatedElements.splice(this.relatedElements.indexOf(element), 1);
     }
   }
 
   onElementUpdated(element: ReplanElement): void {
-    console.info("onElementUpdated at app.component.ts does not do anything");
+
   }
 
   onElementSelected(elem: ReplanElement): void {

@@ -50,6 +50,11 @@
     <div class="grid-cell-60">
       <element-list *ngIf="relatedElements" [elements]="relatedElements" [type]="relatedElementsName"
                     [onElementChange]="this" (elementSelected)="onElementSelected($event)"></element-list>
+      <div *ngIf="showReleasePlan">
+        <pre *ngIf="activeElement.plan">
+          {{activeElement.getPlanAsString()}}
+        </pre>
+      </div>
     </div>
 
     <div class="grid-cell-20">

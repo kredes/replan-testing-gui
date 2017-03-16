@@ -20,9 +20,6 @@ export class ResourceDetailComponent extends ElementDetailComponent implements O
 
   ngOnInit(): void {
     if (this.createElement) this.element = new Resource(null, null, null, null, []);
-    else {
-      console.log("RESOURCE", this.element);
-    }
 
     let elem = this.element as Resource;
 
@@ -33,8 +30,6 @@ export class ResourceDetailComponent extends ElementDetailComponent implements O
     let elem = this.element as Resource;
     if (this.oldSkills.length == 0 && elem.skills) elem.skills.forEach(s => this.oldSkills.push(s.id));
     if (this.oldReleases.length == 0 && elem.releases) elem.releases.forEach(r => this.oldReleases.push(r.id));
-
-    if (elem.releases.length > 0) console.log("ELEMENT AFTER RELEASES ADDED", elem);
   }
 
   onSkillStateChange(event: Event) {

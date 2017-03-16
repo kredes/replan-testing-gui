@@ -17,7 +17,6 @@ export class ControllerService {
   private basePath: string;
   currentProjectId: number;
   previousProjectId: number;
-  //= 'http://localhost:3000/api/ui/v1/projects/1';
 
 
   private projects: Object = {};
@@ -135,7 +134,6 @@ export class ControllerService {
         delete this.features[element.id];
         break;
       case ReplanElemType.RESOURCE:
-        console.log("Uncaching element with id", element.id);
         delete this.resources[element.id];
         break;
       case ReplanElemType.RELEASE:
@@ -176,6 +174,13 @@ export class ControllerService {
       .catch(this.handleError);
   }
 
+  getReleasePlan(release: Release): Promise<any> {
+    return this.http.get(this.basePath + '/releases/' + release.id + '/plan')
+      .toPromise()
+      .then(response => response)
+      .catch(this.handleError)
+  }
+
   getCachedProject(id: number): Project {
     if (this.projects[id]) return this.projects[id];
     else return null;
@@ -193,9 +198,6 @@ export class ControllerService {
     else return null;
   }
   getCachedResource(id: number): Resource {
-
-    console.info("Trying to get Resource with id", id, "from cache");
-    console.info("Cache:", this.resources);
     if (this.resources[id]) return this.resources[id];
     else return null;
   }
@@ -523,7 +525,6 @@ export class ControllerService {
 
 
   /* UPDATES */
-  // TODO: This seems to always cause a 500 error, but the server actually updates the Feature. ???
   updateFeature(feature: Feature): Promise<Object> {
     let body: Object = {
       'name': feature.name,
