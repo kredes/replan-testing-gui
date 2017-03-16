@@ -198,9 +198,8 @@ export class AppComponent implements OnInit, OnElementChange {
   setApiUrl(newUrl: string): void {
     this.controllerService.apiUrl = newUrl;
     this.controllerService.setActiveProject(1);
-    Skill.clearCache();
+    this.controllerService.clearCache();
     this.breadcrumbs = [];
     this.ngOnInit();
-    console.log((this.activeElement as Project).skills);
   }
 }
