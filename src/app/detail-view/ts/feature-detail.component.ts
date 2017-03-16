@@ -2,7 +2,6 @@ import {Component, OnInit, DoCheck} from "@angular/core";
 import {ElementDetailComponent} from "./element-detail.component";
 import {Feature} from "../../domain/feature";
 import {Skill} from "../../domain/skill";
-import {element} from "protractor";
 
 @Component({
   selector: 'feature-detail',

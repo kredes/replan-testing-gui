@@ -1,9 +1,4 @@
-import {Component, OnInit, Input, ViewChild, OnChanges, SimpleChanges, DoCheck, ElementRef} from "@angular/core";
-import {Release} from "../domain/release";
-import {Feature} from "../domain/feature";
-import {Resource} from "../domain/resource";
-import {Skill} from "../domain/skill";
-import {Project} from "../domain/project";
+import {Component, OnInit, ViewChild, DoCheck, ElementRef} from "@angular/core";
 import {ChangeRecordService} from "../services/change-record.service";
 import {Record} from "../services/record";
 import {OnRecordAdded} from "../services/on-record-added";

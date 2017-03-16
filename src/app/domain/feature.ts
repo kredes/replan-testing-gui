@@ -1,4 +1,3 @@
-import {Resource} from "./resource";
 import {Skill} from "./skill";
 import {Config} from "../config";
 import {Log} from "../log";
@@ -7,8 +6,6 @@ import {ReplanElemType} from "./replan-elem-type";
 import {Record} from "../services/record";
 import {RecordType} from "../services/record-type";
 import {Project} from "./project";
-import {Utils} from "../utils";
-import {Release} from "./release";
 
 export class Feature extends ReplanElement {
 

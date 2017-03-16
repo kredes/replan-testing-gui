@@ -1,8 +1,5 @@
-import {Injectable, OnInit} from "@angular/core";
+import {Injectable} from "@angular/core";
 import {Record} from "./record";
-import {RecordType} from "./record-type"
-import {Feature} from "../domain/feature";
-import {Resource} from "../domain/resource";
 import {OnRecordAdded} from "./on-record-added";
 
 @Injectable()

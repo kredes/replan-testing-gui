@@ -1,12 +1,8 @@
-import {Component, Input, OnInit, DoCheck} from "@angular/core";
-import {Record} from "../../services/record";
-import {RecordType} from "../../services/record-type";
+import {Component, OnInit, DoCheck} from "@angular/core";
 import {ElementDetailComponent} from "./element-detail.component";
 import {Resource} from "../../domain/resource";
-import {Feature} from "../../domain/feature";
 import {Skill} from "../../domain/skill";
 import {Project} from "../../domain/project";
-import {Utils} from "../../utils";
 
 @Component({
   moduleId: module.id,

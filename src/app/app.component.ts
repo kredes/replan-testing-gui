@@ -1,16 +1,13 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit} from "@angular/core";
 import {ControllerService} from "./services/controller.service";
 import {Project} from "./domain/project";
 import {ChangeRecordService} from "./services/change-record.service";
 import {ReplanElement} from "./domain/replan-element";
-import {and} from "@angular/router/src/utils/collection";
 import {ReplanElemType} from "./domain/replan-elem-type";
 import {OnElementChange} from "./detail-view/ts/on-element-change";
-import {element} from "protractor";
 import {Release} from "./domain/release";
 import {Resource} from "./domain/resource";
 import {Feature} from "./domain/feature";
-import {Skill} from "./domain/skill";
 import {Utils} from "./utils";
 
 @Component({

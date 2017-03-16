@@ -1,7 +1,6 @@
-import { Injectable } from '@angular/core';
-import {Headers, Http, URLSearchParams, RequestOptions} from '@angular/http';
-
-import 'rxjs/add/operator/toPromise';
+import {Injectable} from "@angular/core";
+import {Http, URLSearchParams, RequestOptions} from "@angular/http";
+import "rxjs/add/operator/toPromise";
 import {Project} from "../domain/project";
 import {Feature} from "../domain/feature";
 import {Resource} from "../domain/resource";

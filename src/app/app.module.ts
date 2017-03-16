@@ -1,11 +1,9 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
-
-import { ControllerService } from './services/controller.service';
-
-import { AppComponent } from './app.component';
+import {BrowserModule} from "@angular/platform-browser";
+import {NgModule} from "@angular/core";
+import {FormsModule} from "@angular/forms";
+import {HttpModule} from "@angular/http";
+import {ControllerService} from "./services/controller.service";
+import {AppComponent} from "./app.component";
 import {ProjectDetailComponent} from "./detail-view/ts/project-detail.component";
 import {FeatureDetailComponent} from "./detail-view/ts/feature-detail.component";
 import {ResourceDetailComponent} from "./detail-view/ts/resource-detail.component";

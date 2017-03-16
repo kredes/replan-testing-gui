@@ -1,4 +1,4 @@
-import {Component, OnInit, Input, OnChanges} from "@angular/core";
+import {Component, Input, OnChanges} from "@angular/core";
 import {Release} from "../domain/release";
 import {Feature} from "../domain/feature";
 import {Resource} from "../domain/resource";

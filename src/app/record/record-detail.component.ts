@@ -1,7 +1,5 @@
-import {Component, Input, OnInit, Output, EventEmitter} from "@angular/core";
+import {Component, Input, Output, EventEmitter} from "@angular/core";
 import {Record} from "../services/record";
-import {CollapseDirective} from "../directives/collapse";
-import {EmitterVisitorContext} from "@angular/compiler/src/output/abstract_emitter";
 
 
 @Component({
