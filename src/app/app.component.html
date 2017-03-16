@@ -51,8 +51,8 @@
       <element-list *ngIf="relatedElements" [elements]="relatedElements" [type]="relatedElementsName"
                     [onElementChange]="this" (elementSelected)="onElementSelected($event)"></element-list>
       <div *ngIf="showReleasePlan">
-        <pre *ngIf="activeElement.plan">
-          {{activeElement.getPlanAsString()}}
+        <pre *ngIf="activeElement.plan" [innerHTML]="activeElement.getPlanAsString()">
+
         </pre>
       </div>
     </div>

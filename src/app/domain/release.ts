@@ -7,6 +7,7 @@ import {Record} from "../services/record";
 import {RecordType} from "../services/record-type";
 import {Feature} from "./feature";
 import {Project} from "./project";
+import {Utils} from "../utils";
 
 export class Release extends ReplanElement {
 
@@ -126,7 +127,7 @@ export class Release extends ReplanElement {
   }
 
   getPlanAsString(): string {
-    if (this.plan) return JSON.stringify(this.plan, null, 2);
+    if (this.plan) return Utils.JSONHighlight(JSON.stringify(this.plan, null, 4));
     else return "There's no plan to show";
   }
 }
