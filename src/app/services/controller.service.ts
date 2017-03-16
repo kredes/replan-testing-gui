@@ -120,6 +120,8 @@ export class ControllerService {
         this.releases[element.id] = element;
         break;
       case ReplanElemType.SKILL:
+        console.debug("Caching skill " + element.name);
+        console.log(this.skills);
         this.skills[element.id] = element;
         break;
     }
@@ -171,6 +173,13 @@ export class ControllerService {
         return projects;
         //return Project.fromJSONArray(response.json();
       })
+      .catch(this.handleError);
+  }
+
+  getAllProjectsSimple(): Promise<Project[]> {
+    return this.http.get(this.apiUrl + "/projects")
+      .toPromise()
+      .then(response => Project.fromJSONArraySimple(response.json()))
       .catch(this.handleError);
   }
 
@@ -353,11 +362,11 @@ export class ControllerService {
 
           response.json().forEach(jsonFeat => {
             if (jsonFeat.id in this.skills) {
-              //console.log("Skill: cache hit");
+              console.log("Skill " + jsonFeat.name + ": cache hit");
               skills.push(this.skills[jsonFeat.id]);
             }
             else {
-              //console.log("Skill: cache miss");
+              console.log("Skill " + jsonFeat.name + ": cache miss");
               skills.push(Skill.fromJSON(jsonFeat, true));
             }
           });

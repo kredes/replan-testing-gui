@@ -65,6 +65,8 @@ export class AppComponent implements OnInit, OnElementChange {
         this.controllerService.clearCache();
         this.controllerService.setActiveProject(proj.id);
 
+        Utils.waitUntilExists(proj.loaded);
+
         proj.loadAsyncData();
 
         this.validTabs = ["Resources", "Features", "Releases", "Skills"];
@@ -137,7 +139,7 @@ export class AppComponent implements OnInit, OnElementChange {
         this.validTabs = ['Projects'];
         this.breadcrumbs = [];
         this._activeElement = null;
-        this.controllerService.getAllProjects()
+        this.controllerService.getAllProjectsSimple()
           .then(projects => {
             console.log(projects);
             this.relatedElementsName = 'project';
@@ -151,9 +153,7 @@ export class AppComponent implements OnInit, OnElementChange {
     }
 
     if (tab == 'Plan') {
-      console.debug("Should show release plan");
       (this.activeElement as Release).updatePlan();
-      console.log(this.activeElement as Release);
       this.showReleasePlan = true;
     } else {
       this.showReleasePlan = false;
@@ -173,7 +173,6 @@ export class AppComponent implements OnInit, OnElementChange {
     if (this.activeElement instanceof Project) {
       if (element instanceof Resource || element instanceof Feature) element.project = this.activeElement;
     }
-
     this.createElement = false;
   }
 

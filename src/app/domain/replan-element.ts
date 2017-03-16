@@ -9,7 +9,7 @@ export abstract class ReplanElement {
   private static _dataService: ControllerService;
   private static _changeRecordService: ChangeRecordService;
   onElementChange: OnElementChange;
-  loaded: Boolean;
+  loaded: Boolean = null;
 
   attributes: string[] = ['id', 'name', 'description'];
 

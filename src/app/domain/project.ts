@@ -29,10 +29,7 @@ export class Project extends ReplanElement {
   ) {
     super(id, name, description, ReplanElemType.PROJECT);
 
-    this.resources.forEach(resource => {
-      this.resourceIds.push(resource.id);
-      resource.project = this;
-    });
+
 
     //Utils.waitUntilExists(this.skills);
     //Utils.waitUntilExists(this.features);
@@ -46,6 +43,16 @@ export class Project extends ReplanElement {
   }
 
   loadAsyncData(): void {
+    this.dataService.getResourcesOf(this)
+      .then(resources => {
+        this.resources = resources;
+        this.resources.forEach(resource => {
+          this.resourceIds.push(resource.id);
+          resource.project = this;
+        });
+        this.loaded = true;
+      });
+
     this.dataService.getSkillsOf(this)
       .then(skills => {
         this.skills = skills
@@ -96,6 +103,32 @@ export class Project extends ReplanElement {
   static fromJSONArray(j: any): Project[] {
     let projects: Project[] = [];
     j.forEach(project => projects.push(this.fromJSON(project, true)));
+    return projects;
+  }
+
+  static fromJSONSimple(j: any, cache: Boolean): Project {
+    if (!Config.suppressElementCreationMessages) Log.i('Creating simple Project from:', j);
+
+    let aux = ReplanElement.staticDataService.getCachedProject(j.id);
+    if (aux) return aux;
+    else {
+      let p = new Project(
+        j.id,
+        j.name,
+        j.description,
+        j.effort_unit,
+        j.hours_per_effort_unit,
+        j.hours_per_week_and_full_time_resource,
+        []
+      );
+      if (cache) ReplanElement.staticDataService.cacheElement(p);
+      return p;
+    }
+  }
+
+  static fromJSONArraySimple(j: any): Project[] {
+    let projects: Project[] = [];
+    j.forEach(project => projects.push(this.fromJSONSimple(project, false)));
     return projects;
   }
 
