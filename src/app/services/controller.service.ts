@@ -665,7 +665,7 @@ export class ControllerService {
   // TODO: Does it always cause a 500 error?
   removeSkillsFromFeature(feature: Feature, skillIds: number[]): Promise<any> {
     let params: URLSearchParams = new URLSearchParams();
-    params.set('skill_id', skillIds.join());
+    skillIds.forEach(id => params.set('skill_id[]', id.toString()));
     let requestOptions = new RequestOptions();
     requestOptions.search = params;
 
