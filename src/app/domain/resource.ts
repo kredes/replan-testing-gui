@@ -77,17 +77,19 @@ export class Resource extends ReplanElement implements OnChanges {
   save(addRecord: Boolean): void {
     this.dataService.createResource(this)
       .then(response => {
-        let res = Resource.fromJSON(response.json(), false);
-        this.attributes.forEach(attr => this[attr] = res[attr]);
+        if (response['ok']) {
+          let res = Resource.fromJSON(response.json(), false);
+          this.attributes.forEach(attr => this[attr] = res[attr]);
 
-        this.dataService.cacheElement(this);
+          this.dataService.cacheElement(this);
+          this.onElementChange.onElementCreated(this);
+        }
 
         if (addRecord) {
           let r = new Record(this, RecordType.CREATION);
           r.response = response;
           this.changeRecordService.addRecord(r);
         }
-        this.onElementChange.onElementCreated(this);
       });
   }
 

@@ -31,7 +31,7 @@ div[class*="-record"] pre {
 }
 
 .creation-record {
-  color: rgba(0, 255, 0, 1);
+  color: green;
   font-weight: bold;
   /*color: black;*/
 }

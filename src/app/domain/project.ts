@@ -152,8 +152,11 @@ export class Project extends ReplanElement {
   save(addRecord: Boolean): void {
     this.dataService.createProject(this)
       .then(response => {
-        let proj = Project.fromJSON(response.json(), false);
-        this.attributes.forEach(attr => this[attr] = proj[attr]);
+        if (response['ok']) {
+          let proj = Project.fromJSON(response.json(), false);
+          this.attributes.forEach(attr => this[attr] = proj[attr]);
+          this.onElementChange.onElementCreated(this);
+        }
 
         /*
           A small detail here: When I create proj above it gets cached, but the cache version is then replaced
@@ -165,7 +168,6 @@ export class Project extends ReplanElement {
           r.response = response;
           this.changeRecordService.addRecord(r);
         }
-        this.onElementChange.onElementCreated(this);
       });
   }
 }

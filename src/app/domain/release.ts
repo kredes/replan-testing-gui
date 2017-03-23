@@ -88,7 +88,7 @@ export class Release extends ReplanElement {
   save(addRecord: Boolean): void {
     this.dataService.createRelease(this)
       .then(response => {
-        //if (response['ok']) {
+        if (response['ok']) {
           let res = Release.fromJSON(response.json(), false);
           this.attributes.forEach(attr => this[attr] = res[attr]);
 
@@ -97,7 +97,7 @@ export class Release extends ReplanElement {
 
           this.dataService.cacheElement(this);
           this.onElementChange.onElementCreated(this);
-        //}
+        }
         if (addRecord) {
           let r = new Record(this, RecordType.CREATION);
           r.response = response;

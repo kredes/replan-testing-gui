@@ -91,16 +91,17 @@ export class Feature extends ReplanElement {
   save(addRecord: Boolean): void {
     this.dataService.createFeature(this)
       .then(response => {
-        let feat = Feature.fromJSON(response.json(), false);
-        this.attributes.forEach(attr => this[attr] = feat[attr]);
-
-        this.dataService.cacheElement(this);
+        if (response['ok']) {
+          let feat = Feature.fromJSON(response.json(), false);
+          this.attributes.forEach(attr => this[attr] = feat[attr]);
+          this.dataService.cacheElement(this);
+          this.onElementChange.onElementCreated(this);
+        }
         if (addRecord) {
           let r = new Record(this, RecordType.CREATION)
           r.response = response;
           this.changeRecordService.addRecord(r);
         }
-        this.onElementChange.onElementCreated(this);
       });
   }
 

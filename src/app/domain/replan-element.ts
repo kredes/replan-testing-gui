@@ -115,7 +115,7 @@ export abstract class ReplanElement {
           r.response = response;
           this.changeRecordService.addRecord(r);
         }
-        //if (response['ok'])
+        if (response['ok'])
           this.onElementChange.onElementDeleted(this);
       });
   }
