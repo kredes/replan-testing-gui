@@ -95,7 +95,11 @@ export class Feature extends ReplanElement {
         this.attributes.forEach(attr => this[attr] = feat[attr]);
 
         this.dataService.cacheElement(this);
-        if (addRecord) this.changeRecordService.addRecord(new Record(this, RecordType.CREATION));
+        if (addRecord) {
+          let r = new Record(this, RecordType.CREATION)
+          r.response = response;
+          this.changeRecordService.addRecord(r);
+        }
         this.onElementChange.onElementCreated(this);
       });
   }

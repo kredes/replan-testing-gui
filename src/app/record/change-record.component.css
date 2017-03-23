@@ -19,18 +19,21 @@ div[class*="-record"] pre {
 }
 
 .deletion-record {
-  background-color: rgba(255, 0, 0, 0.5);
-  color: black;
+  color: rgba(255, 0, 0, 1);
+  font-weight: bold;
+  /*color: black;*/
 }
 
 .update-record {
-  background-color: rgba(0, 0, 255, 0.5);
-  color: white;
+  color: rgba(0, 0, 255, 1);
+  font-weight: bold;
+  /*color: white;*/
 }
 
 .creation-record {
-  background-color: rgba(255, 255, 0, 0.5);
-  color: black;
+  color: rgba(0, 255, 0, 1);
+  font-weight: bold;
+  /*color: black;*/
 }
 
 .record-title {
@@ -42,3 +45,18 @@ div[class*="-record"] pre {
 }
 
 
+span[class^="response-"] {
+  color: red;
+  font-weight: bold;
+}
+
+.response-200 {
+  color: green !important;
+}
+
+pre {
+  white-space: pre-wrap;       /* css-3 */
+  white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+  white-space: -o-pre-wrap;    /* Opera 7 */
+  word-wrap: break-word;       /* Internet Explorer 5.5+ */
+}

@@ -625,21 +625,6 @@ export class ControllerService {
       .catch(this.handleError);
   }
 
-  // TODO: Isn't this the same as createResource? Add the resource to the actual Project instance?
-  /*  And most likely done bad. Removing it doesn't seem to break anything.
-  addResourceToProject(res: Resource): Promise<any> {
-    let body = {
-      'name': res.name,
-      'description': res.description,
-      'availability': res.availability
-    };
-    return this.http.post(
-      this.basePath + '/resources/' + res.id, body)
-      .toPromise()
-      .then(response => response)
-      .catch(this.handleError)
-  }*/
-
   addResourcesToRelease(relId: number, resourceIds: number[]): Promise<any> {
     let body = [];
     resourceIds.forEach(id => body.push({'resource_id': id}));
@@ -662,7 +647,6 @@ export class ControllerService {
 
 
   /* REMOVE X FROM Y */
-  // TODO: Does it always cause a 500 error?
   removeSkillsFromFeature(feature: Feature, skillIds: number[]): Promise<any> {
     let params: URLSearchParams = new URLSearchParams();
     skillIds.forEach(id => params.set('skill_id[]', id.toString()));

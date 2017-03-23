@@ -67,12 +67,18 @@ export class Skill extends ReplanElement {
   save(addRecord: Boolean): void {
     this.dataService.createSkill(this)
       .then(response => {
-        let res = Skill.fromJSON(response.json(), false);
-        this.attributes.forEach(attr => this[attr] = res[attr]);
+        //if (response['ok']) {
+          let res = Skill.fromJSON(response.json(), false);
+          this.attributes.forEach(attr => this[attr] = res[attr]);
 
-        this.dataService.cacheElement(this);
-        if (addRecord) this.changeRecordService.addRecord(new Record(this, RecordType.CREATION));
-        this.onElementChange.onElementCreated(this);
+          this.dataService.cacheElement(this);
+          this.onElementChange.onElementCreated(this);
+        //}
+        if (addRecord) {
+          let r = new Record(this, RecordType.CREATION);
+          r.response = response;
+          this.changeRecordService.addRecord(r);
+        }
       });
   }
 }

@@ -19,17 +19,6 @@ export class Utils {
 
   static waitUntilExists(x: any) {
     this.waitUntilExists_i(x, 0);
-    /*
-    let t;
-    if (!x) {
-      console.log("Waiting until some element is loaded...");
-      t = setTimeout(Utils.waitUntilExists(x), 100);
-    } else {
-      console.log("Something came into existence", x);
-      clearTimeout(t);
-      return;
-    }
-    */
   }
 
   static JSONHighlight(json: string) {

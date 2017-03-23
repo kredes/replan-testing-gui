@@ -1,10 +1,11 @@
 import {RecordType} from "./record-type";
 import {ReplanElement} from "../domain/replan-element";
+import {Utils} from "../utils";
 
 export class Record {
-
   private _element: ReplanElement;
   private _oldValues: Object;
+  private _response: Object;
   id: number;
 
   constructor(
@@ -27,6 +28,14 @@ export class Record {
   }
   set oldValues(value: Object) {
     this._oldValues = value;
+  }
+
+  get response(): Object {
+    return this._response;
+  }
+
+  set response(value: Object) {
+    this._response = value;
   }
 
   getTypeName() {
@@ -52,6 +61,6 @@ export class Record {
   }
 
   toJSON(): string {
-    return JSON.stringify(this.oldValues, null, 2);
+    return Utils.JSONHighlight(JSON.stringify(this.oldValues, null, 2));
   }
 }

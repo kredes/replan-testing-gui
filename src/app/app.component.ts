@@ -46,14 +46,6 @@ export class AppComponent implements OnInit, OnElementChange {
   }
 
   ngOnInit(): void {
-    /*this.controllerService.getProject(1)
-      .then(project => {
-        console.log(project);
-        this.activeElement = project;
-        this.validTabs = ["Resources", "Features", "Releases", "Skills"];
-        this.onTabSelected("Resources");
-        this.breadcrumbs.push(this.activeElement);
-      });*/
     this.onTabSelected('Projects');
   }
 
@@ -183,7 +175,7 @@ export class AppComponent implements OnInit, OnElementChange {
   }
 
   onElementUpdated(element: ReplanElement): void {
-
+    console.info("ON ELEMENT UPDATED");
   }
 
   onElementSelected(elem: ReplanElement): void {

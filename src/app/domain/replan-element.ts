@@ -97,17 +97,26 @@ export abstract class ReplanElement {
   update(addRecord: Boolean): void {
     this.dataService.updateElement(this)
       .then(response => {
-        if (addRecord) this.changeRecordService.addRecord(new Record(this, RecordType.UPDATE));
-        this.onElementChange.onElementUpdated(this);
+        if (addRecord) {
+          console.log(response);
+          let r = new Record(this, RecordType.UPDATE);
+          r.response = response;
+          this.changeRecordService.addRecord(r);
+        }
+        if (response['ok']) this.onElementChange.onElementUpdated(this);
       });
   }
 
   remove(addRecord: Boolean): void {
     this.dataService.removeElement(this)
       .then(response => {
-        console.table(response);
-        if (addRecord) this.changeRecordService.addRecord(new Record(this, RecordType.DELETION));
-        this.onElementChange.onElementDeleted(this);
+        if (addRecord) {
+          let r = new Record(this, RecordType.DELETION);
+          r.response = response;
+          this.changeRecordService.addRecord(r);
+        }
+        //if (response['ok'])
+          this.onElementChange.onElementDeleted(this);
       });
   }
 
