@@ -40,7 +40,8 @@
   <resource-detail *ngFor="let elem of elements" [element]="elem" [createElement]="false"
                    [onElementChange]="onElementChange" (elementSelected)="onElementSelected($event)"></resource-detail>
   <resource-detail *ngIf="createElement" [createElement]="true" [onElementChange]="onElementChange" (elementCreated)="elementCreated()"></resource-detail>
-  <div *ngIf="elements.length == 0">Nothing to show.</div>
+  <div *ngIf="elements.length == 0">Nothing to show. If this is the first time selecting Resources after reloading, please
+  switch to another tab and come back. This will be empty the first time due to a bug.</div>
 </div>
 
 
