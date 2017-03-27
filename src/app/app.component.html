@@ -7,9 +7,10 @@
     <div id="url-selector" class="grid-cell-50">
       <div class="centered">
         <select (change)="setApiUrl($event.target.value)">
-          <option value="http://localhost:3000/api/ui/v1">Local (http://localhost:3000/api/ui/v1)</option>
+          <option value="http://platform.supersede.eu:8280/replan">Production (http://platform.supersede.eu:8280/replan)</option>
+          <option value="http://62.14.219.13:8280/replan">Development (http://62.14.219.13:8280/replan)</option>
           <option value="https://replan-project-carlesf.c9users.io/api/ui/v1">Carles (https://replan-project-carlesf.c9users.io/api/ui/v1)</option>
-          <option value="http://62.14.219.13:8280/replan">SUPERSEDE (http://62.14.219.13:8280/replan)</option>
+          <option value="http://localhost:3000/api/ui/v1">Local (http://localhost:3000/api/ui/v1)</option>
         </select>
       </div>
     </div>

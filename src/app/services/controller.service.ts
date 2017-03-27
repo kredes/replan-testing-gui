@@ -11,9 +11,11 @@ import {ReplanElemType} from "../domain/replan-elem-type";
 
 @Injectable()
 export class ControllerService {
-  //private _apiUrl = 'https://replan-project-carlesf.c9users.io/api/ui/v1';
-  private _apiUrl = 'http://localhost:3000/api/ui/v1';
+  private _apiUrl = 'http://platform.supersede.eu:8280/replan';
   //private _apiUrl = 'http://62.14.219.13:8280/replan';
+  //private _apiUrl = 'https://replan-project-carlesf.c9users.io/api/ui/v1';
+  //private _apiUrl = 'http://localhost:3000/api/ui/v1';
+
   private basePath: string;
   currentProjectId: number;
   previousProjectId: number;
@@ -120,8 +122,6 @@ export class ControllerService {
         this.releases[element.id] = element;
         break;
       case ReplanElemType.SKILL:
-        console.debug("Caching skill " + element.name);
-        console.log(this.skills);
         this.skills[element.id] = element;
         break;
     }
@@ -362,11 +362,11 @@ export class ControllerService {
 
           response.json().forEach(jsonFeat => {
             if (jsonFeat.id in this.skills) {
-              console.log("Skill " + jsonFeat.name + ": cache hit");
+              //console.log("Skill " + jsonFeat.name + ": cache hit");
               skills.push(this.skills[jsonFeat.id]);
             }
             else {
-              console.log("Skill " + jsonFeat.name + ": cache miss");
+              //console.log("Skill " + jsonFeat.name + ": cache miss");
               skills.push(Skill.fromJSON(jsonFeat, true));
             }
           });

@@ -133,7 +133,6 @@ export class AppComponent implements OnInit, OnElementChange {
         this._activeElement = null;
         this.controllerService.getAllProjectsSimple()
           .then(projects => {
-            console.log(projects);
             this.relatedElementsName = 'project';
             this.relatedElements = projects
           });
@@ -160,7 +159,6 @@ export class AppComponent implements OnInit, OnElementChange {
 
   onElementCreated(element: ReplanElement): void {
     this.relatedElements.push(element);
-    console.log(this.relatedElements);
 
     if (this.activeElement instanceof Project) {
       if (element instanceof Resource || element instanceof Feature) element.project = this.activeElement;
@@ -175,7 +173,7 @@ export class AppComponent implements OnInit, OnElementChange {
   }
 
   onElementUpdated(element: ReplanElement): void {
-    console.info("ON ELEMENT UPDATED");
+    console.info("ELEMENT UPDATED");
   }
 
   onElementSelected(elem: ReplanElement): void {

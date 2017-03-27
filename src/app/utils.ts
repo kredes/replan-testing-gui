@@ -3,15 +3,15 @@ export class Utils {
     let t;
 
     if (elapsedTime > 3000) {
-      console.error("Waiting timed out (> 3000 ms)");
+      //console.error("Waiting timed out (> 3000 ms)");
       return;
     }
 
     if (!x) {
-      console.log("Waiting until some element is loaded...");
+      //console.log("Waiting until some element is loaded...");
       t = setTimeout(function() {Utils.waitUntilExists_i(x, elapsedTime + 100)}, 100);
     } else {
-      console.log("Something came into existence", x);
+      //console.log("Something came into existence", x);
       clearTimeout(t);
       return;
     }
